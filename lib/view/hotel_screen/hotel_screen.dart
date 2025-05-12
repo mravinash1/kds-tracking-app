@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
  }
 
   class _KitchenScreenState extends State<HotelScreen> {
-  late HotelDisplayController controller;
+  late HotelDisplayController controller; 
 
   @override
   void initState() {
@@ -69,6 +69,11 @@ import 'package:intl/intl.dart';
                                     ),
                                   ),
                                   const Divider(),
+
+                            
+                               
+                            
+
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,

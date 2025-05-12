@@ -80,6 +80,20 @@ class _NotificationKitchenScreenState extends State<NotificationKitchenScreen> {
                             ),
                             const Divider(),
 
+                            if(data.orders.first.kot.status == 2)
+                     Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Order Cancelled',style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 17),),
+                         // SizedBox(width: 4,),
+                         // Icon(Icons.cancel,color: Colors.red,)
+                        ],
+                      ),
+                     ) ,
+                     SizedBox(height: 6,),
+
+
                             // Date & Time Row
 
                             Row(
@@ -159,12 +173,39 @@ class _NotificationKitchenScreenState extends State<NotificationKitchenScreen> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                        Expanded(child: Text(' ${orderData.kot.itname}',style: TextStyle(fontWeight: FontWeight.bold),)),
+                                      //  Expanded(child: Text(' ${orderData.kot.itname}',style: TextStyle(fontWeight: FontWeight.bold),)),
+                                          Expanded(
+                                         child: Text(
+                                           '${orderData.kot.itname}',
+                                           style: TextStyle(
+                                             fontSize: textScale * 16,
+                                             fontWeight: FontWeight.bold,
+                                             color: orderData.kot.qty == 0 ? Colors.red : Colors.black,
+                                            decoration: orderData.kot.qty == 0 ? TextDecoration.lineThrough : TextDecoration.none,
+                                             decorationColor: Colors.red,
+                                             decorationThickness: 2,
+                                           ),
+                                         ),
+                                       ),
+
+
+                                        // Text(
+                                        //    'X  ${orderData.kot.qty?.toStringAsFixed(0)}',
+                                        //       style: TextStyle(fontSize: textScale * 15, fontWeight: FontWeight.bold, color: Colors.green.shade800),
+                                        //       ),
+
+
 
                                         Text(
-                                           'X  ${orderData.kot.qty?.toStringAsFixed(0)}',
-                                              style: TextStyle(fontSize: textScale * 15, fontWeight: FontWeight.bold, color: Colors.green.shade800),
-                                              ),
+                                      orderData.kot.qty == 0
+                                       ? 'Cancel'
+                                       : 'X ${orderData.kot.qty?.toStringAsFixed(0)}',
+                                         style: TextStyle(
+                                      fontSize: textScale * 15,
+                                       color: orderData.kot.qty == 0 ? Colors.red : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                       ), 
+                                       ),
                                         
                                         ],
                                       ),
@@ -212,7 +253,12 @@ class _NotificationKitchenScreenState extends State<NotificationKitchenScreen> {
                               alignment: Alignment.centerRight,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (data.orders.first.kot.kdsstatus == 1) {
+                                  if(data.orders.first.kot.status == 2){
+                                   Get.snackbar('Cancel', 'Order cancelled ',backgroundColor: Colors.red,);
+                                 }
+
+
+                                  else if (data.orders.first.kot.kdsstatus == 1) {
                                     controller.updateOrderStatus(
                                       shopNumber: data.orders.first.kot.shopvno!,
                                       status: 2,

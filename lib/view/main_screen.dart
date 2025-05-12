@@ -1,9 +1,11 @@
 import 'package:billhosts/controller/hotel_screen_controller.dart';
 import 'package:billhosts/controller/kds_display_controller.dart';
+import 'package:billhosts/controller/login_controller.dart';
 import 'package:billhosts/view/hotel_screen/hotel_screen.dart';
 import 'package:billhosts/view/hotel_screen/notification_hotel_screen.dart';
 import 'package:billhosts/view/kichen_display/kichen_display.dart';
 import 'package:billhosts/view/kichen_display/notification_kitchen_screen.dart';
+import 'package:billhosts/view/kichen_display/stock_update_screen.dart';
 import 'package:billhosts/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -128,22 +130,28 @@ import 'package:get/get.dart';
                   )),
             ],
 
-            bottom: const TabBar(
+            bottom: TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
+          
               labelColor: Colors.white,
               indicatorColor: Colors.white,
-              tabs: [
+              tabs: const [
                 Tab(
                   child: Text(
                     'Restaurant',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
+                
                 Tab(
                   child: Text(
                     'Room Services',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
+                  
+
+
               ],
             ),
           ),
@@ -153,55 +161,60 @@ import 'package:get/get.dart';
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                UserAccountsDrawerHeader(
-                  accountName: const Text("BillHost"),
-                  accountEmail: const Text(""),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      "BH",
-                      style: TextStyle(fontSize: 24, color: Colors.green[600]),
-                    ),
-                  ),
-                  decoration: BoxDecoration(color: Colors.green[600]),
+                // UserAccountsDrawerHeader(
+                //   accountName: Text("BillHost",),
+                //   accountEmail: const Text(""),
+                //   currentAccountPicture: CircleAvatar(
+                //     backgroundColor: Colors.white,
+                //     child: Text(
+                //       "BH",
+                //       style: TextStyle(fontSize: 24, color: Colors.green[600]),
+                //     ),
+                //   ),
+                //   decoration: BoxDecoration(color: Colors.green[600]),
+                // ),
+
+
+                UserAccountsDrawerHeader(accountName: Text('Bill-Host'),
+                 accountEmail: Text(''),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage('assets/billhost.png'),
+                  backgroundColor: Colors.white,
                 ),
+                decoration: BoxDecoration(color: Colors.green[600]),
+                ),
+                
+
+
+
                 ListTile(
-                  leading: const Icon(Icons.shopping_cart),
-                  title: const Text("Purchase Orders"),
+               //   leading: const Icon(Icons.info_outline,color: Colors.black,),
+               leading: const Icon(Icons.trending_up_outlined,color: Colors.black,),
+                  title: const Text("Items Stock update",style: TextStyle(color: Colors.black),),
                   onTap: () {
-                  //  Get.snackbar("Info", "Purchase Order List");
-                //  Get.to(ItemListScreen());
+                     final loginController = Get.find<LoginController>();
+                    int shopId = loginController.userId;
+
+                   Get.to(() => ItemListScreen(shopId: shopId,));
                   },
                 ),
+                 
+                 
+                  
 
-                //  const Divider(),
-                // ListTile(
-                //   leading: const Icon(Icons.settings),
-                //   title: const Text("Settings"),
-                //   onTap: () {
-                //     Get.snackbar("Info", "Settings Screen");
-                //   },
-                // ),
+                   const Divider(),
+                   ListTile(
+                   leading: const Icon(Icons.logout,color: Colors.black,),
+                   title: const Text("Logout",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                   onTap: () {
+                   // Get.offAllNamed('/login'); // Clear stack and navigate to login
+                  Get.to(LoginScreen());
+                  
 
-                // ListTile(
-                //   leading: const Icon(Icons.info_outline),
-                //   title: const Text("About"),
-                //   onTap: () {
-                //     Get.snackbar("Info", "About the App");
-                //   },
-                // ),
                  
 
 
-                  
-
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text("Logout"),
-                  onTap: () {
-                   // Get.offAllNamed('/login'); // Clear stack and navigate to login
-                   Get.to(LoginScreen());
+                 
                   },
                 ),
               ],

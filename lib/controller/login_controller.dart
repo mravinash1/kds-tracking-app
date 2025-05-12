@@ -18,9 +18,9 @@ import '../utils/api_service_class.dart';
     try {
       var response = await HttpService().get(
           "${AppConstants.loginshope}${emailController.text}/${passwordController.text}");
-          print('>>>>>>>>>>>>>>>>>>>>>response $response');
+  //      print('>>>>>>>>>>>>>>>>>>>>>response $response');
 
-      debugPrint("response  $response");
+  //    debugPrint("response  $response");
       if (response != null) {
         loginshop = List<Loginshopmallmodels>.from(
             response.map((x) => Loginshopmallmodels.fromJson(x)));

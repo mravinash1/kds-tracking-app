@@ -6,7 +6,7 @@
 import 'dart:convert';
 List<FilterModelOfKds> filterModelOfKdsFromJson(String str) => List<FilterModelOfKds>.from(json.decode(str).map((x) => FilterModelOfKds.fromJson(x)));
 
-String filterModelOfKdsToJson(List<FilterModelOfKds> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String filterModelOfKdsToJson(List<FilterModelOfKds> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson()))); 
 
 class FilterModelOfKds {
   int shopvno;
@@ -18,7 +18,7 @@ class FilterModelOfKds {
   });
 
   factory FilterModelOfKds.fromJson(Map<String, dynamic> json) => FilterModelOfKds(
-    shopvno: json["shopvno"],
+    shopvno: json["shopvno"], 
     orders: List<Order>.from(json["orders"].map((x) => Order.fromJson(x))),
   );
 
@@ -75,7 +75,7 @@ class KotData {
   final int? kottype;
   final int? rawcode;
   final double? qty;
-  final int? status;
+  final dynamic status;
   final int? blno;
   final int? tablecode;
   final String? tablename;
@@ -288,3 +288,19 @@ class KotData {
     "kdsstatus": kdsstatus,
   };
 }
+
+
+
+    
+
+  
+
+
+
+
+
+
+
+
+
+

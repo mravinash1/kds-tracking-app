@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart'; 
 import 'package:intl/intl.dart';
 import '../../controller/kds_display_controller.dart';
 
 class KitchenScreen extends StatefulWidget {
 const KitchenScreen({super.key});
 
-  @override
-  State<KitchenScreen> createState() => _KitchenScreenState();
- }
-
-  class _KitchenScreenState extends State<KitchenScreen> {
-  late KDSDisplayController controller;
-
-  @override
-    void initState() {
-    controller = Get.put(KDSDisplayController());
-    super.initState();
-  }
+  @override 
+  State<KitchenScreen> createState() => _KitchenScreenState(); 
+ } 
+ 
+  class _KitchenScreenState extends State<KitchenScreen> { 
+  late KDSDisplayController controller; 
+  
+  @override 
+    void initState() { 
+    controller = Get.put(KDSDisplayController());  
+    super.initState(); 
+  } 
 
   @override
   Widget build(BuildContext context) {
-
+ 
     // ignore: deprecated_member_use
     double textScale = MediaQuery.of(context).textScaleFactor;
 
      return Scaffold(
-
       body: Padding(
         padding: const EdgeInsets.all(1),
         child: Container(
@@ -60,7 +59,7 @@ const KitchenScreen({super.key});
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // KOT Number
-
+ 
                              Center(
                              child: Text(
                                 'KOT No: ${data.orders.first.kot.shopvno}',
@@ -72,6 +71,29 @@ const KitchenScreen({super.key});
                               ),
                             ),
                             const Divider(),
+
+                    //  if(data.orders.first.kot.status ==2)
+                    // Center(child: Text('Order Cancelled  ',style: TextStyle(color: Colors.red,
+                    // fontWeight: FontWeight.bold,fontSize: 17),)),
+                           
+                             
+                                                                                 
+                     if(data.orders.first.kot.status == 2)
+                     Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Order Cancelled',style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 17),),
+                          SizedBox(width: 4,),
+                          Icon(Icons.cancel,color: Colors.red,)
+                         ],
+                         ),
+                         ) ,
+                         SizedBox(height: 6,), 
+
+                     
+
+                            
 
                             // Date & Time Row
 
@@ -87,12 +109,12 @@ const KitchenScreen({super.key});
                                   style: TextStyle(fontSize: textScale * 15, fontWeight: FontWeight.bold),
                                 ),
                               ],
-                            ),
+                            ),  
                             SizedBox(height: 6,),
 
                             // Type, Table, Waiter
                               Padding(
-                              padding: const EdgeInsets.only(top: 5),
+                              padding: const EdgeInsets.only(top: 5), 
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -123,9 +145,12 @@ const KitchenScreen({super.key});
                             Center(
                               child: Text(
                                 'Order Items',
-                                style: TextStyle(fontSize: textScale * 17, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: textScale * 17, fontWeight: FontWeight.bold,), 
                               ),
                             ),
+
+
+                                    
 
 
 
@@ -154,13 +179,46 @@ const KitchenScreen({super.key});
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                        Expanded(child: Text(' ${orderData.kot.itname}',style: TextStyle(fontWeight: FontWeight.bold),)),
+                                       // Expanded(child: Text(' ${orderData.kot.itname}',style: TextStyle(fontWeight: FontWeight.bold),)),
+                                       Expanded(
+                                         child: Text(
+                                           '${orderData.kot.itname}',
+                                           style: TextStyle(
+                                             fontSize: textScale * 16,
+                                             fontWeight: FontWeight.bold,
+                                             color: orderData.kot.qty == 0 ? const Color.fromARGB(255, 8, 8, 8) : Colors.black,
+                                            decoration: orderData.kot.qty == 0 ? TextDecoration.lineThrough : TextDecoration.none,
+                                             decorationColor: Colors.red,
+                                             decorationThickness: 2,
+                                           ),
+                                         ),
+                                       ),
 
-                                        Text(
-                                           'X ${orderData.kot.qty?.toStringAsFixed(0)}',
-                                              style: TextStyle(fontSize: textScale * 15, color: Colors.black),
-                                              ),
-                                              SizedBox(width: 5,),
+                                          
+
+                                        // Text(
+                                        //    'X ${orderData.kot.qty?.toStringAsFixed(0)}',
+                                        //       style: TextStyle(fontSize: textScale * 15, color: Colors.black),
+                                        //       ),
+                                              
+                                            
+                                     Text(
+                                      orderData.kot.qty == 0
+                                       ? 'Cancel'
+                                       : 'X ${orderData.kot.qty?.toStringAsFixed(0)}',
+                                         style: TextStyle(
+                                      fontSize: textScale * 15,
+                                       color: orderData.kot.qty == 0 ? Colors.red : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                       ), 
+                                       ),
+
+                                    
+                                    
+                                          
+                                    
+
+                                       SizedBox(width: 5,),
 
 
                                         Text(data.orders.first.UnitName.toString(),style: TextStyle(color: Colors.red),),
@@ -189,6 +247,8 @@ const KitchenScreen({super.key});
                                             ),
                                         
                                          //  const Icon(Icons.redeem_outlined, color: Colors.redAccent, size: 18),
+
+                                         
                                         
                                           ],
                                         ),
@@ -207,12 +267,20 @@ const KitchenScreen({super.key});
                             //const SizedBox(height: 10),
                             
                             // Accept / Ready Button
+                     
+
 
                             Align(
                               alignment: Alignment.centerRight,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (data.orders.first.kot.kdsstatus == 1) {
+
+                                 if(data.orders.first.kot.status == 2){
+                                   Get.snackbar('Cancel', 'Order cancelled ',backgroundColor: Colors.red,);
+                                 }
+
+
+                               else if (data.orders.first.kot.kdsstatus == 1 ) {
                                     controller.updateOrderStatus(
                                       shopNumber: data.orders.first.kot.shopvno!,
                                       status: 2,

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,14 +11,13 @@ import 'package:http/http.dart' as http;
 
   // GET request
   Future<dynamic> get(String endpoint) async {
-    debugPrint('get Url======>$baseUrl$endpoint');
+
+ // debugPrint('get Url======>$baseUrl$endpoint');
+
     var connectivityResult = await Connectivity().checkConnectivity();
     final url = Uri.parse('$baseUrl$endpoint');
     try {
-      if (connectivityResult
-              .toString()
-              .replaceAll('[', '')
-              .replaceAll(']', '') ==
+      if (connectivityResult.toString().replaceAll('[', '').replaceAll(']', '') ==            
           ConnectivityResult.none.toString()) {
         Get.snackbar(
             'No internet connection', "Please Check Your internet connection");

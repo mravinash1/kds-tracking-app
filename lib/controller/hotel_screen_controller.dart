@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import '../constants/endpoint.dart';
 import '../models/kds_hotel_model/filter_hotel_model.dart';
-import '../models/kds_hotel_model/kds_hotel_model.dart';
+import '../models/kds_hotel_model/kds_hotel_model.dart'; 
 import '../utils/api_service_class.dart';
 
   class HotelDisplayController extends GetxController {
@@ -114,7 +114,7 @@ import '../utils/api_service_class.dart';
 
         filterKDS = groupedOrders.values.toList();
 
-        print('Grouped KDS Hotel Data: ${jsonEncode(filterKDS)}');
+     //   print('Grouped KDS Hotel Data: ${jsonEncode(filterKDS)}');
         if (_shopNumberCount != roomNoList.length) {
           _shopNumberCount = roomNoList.length;
           await _playSound();
@@ -126,7 +126,7 @@ import '../utils/api_service_class.dart';
     } catch (e) {
       isLoading = false;
       update();
-      debugPrint("Error during fetchData: $e");
+     // debugPrint("Error during fetchData: $e");
     } finally {
       isLoading = false;
       update();
