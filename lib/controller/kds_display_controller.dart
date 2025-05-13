@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:billhosts/controller/login_controller.dart';
 import 'package:billhosts/models/filter_model_of_kds.dart';
 import 'package:billhosts/models/kds_display_models.dart';
+import 'package:billhosts/utils/notification_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,6 +81,8 @@ Future fetchData() async {
         // If it's a new order
         if (prevItem.kot == null) {
           shouldPlaySound = true;
+        await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
+
           break;
         }
 
@@ -229,10 +232,7 @@ Future<void> updateOrderStatus({required int shopNumber, required int status, re
 
       
       //  _playSound();
-
-
-    
-
+      
     } else {
       Get.snackbar("Error", "Failed to update order status");
     }

@@ -1,8 +1,14 @@
+import 'package:billhosts/utils/notification_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'view/login_screen.dart';
 
-  void main() {
+
+  void main() async{
+    WidgetsFlutterBinding.ensureInitialized();
+   await NotificationService.init(); // Initialize notifications
+    await requestNotificationPermission();
+
   runApp(const MyApp());
   }
   
