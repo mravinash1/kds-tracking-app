@@ -37,7 +37,7 @@ import 'package:intl/intl.dart';
               init: controller,
               builder: (context) {
                 return ListView.builder(
-                  padding: const EdgeInsets.all(1),
+                  padding: const EdgeInsets.only(bottom: 46,left: 5,right: 5),
 
                   itemCount: controller.filterKDS.length,
                  //  itemCount: controller.roomNoList.length,

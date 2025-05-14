@@ -40,7 +40,7 @@ const KitchenScreen({super.key});
             init: controller,
             builder: (context) {
               return ListView.builder(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.only(bottom: 45,left: 1,right: 1),
                 itemCount: controller.shopNoList.length,
                 itemBuilder: (context, index) {
                   var data = controller.filterKDS[index];

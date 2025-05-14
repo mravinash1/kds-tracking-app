@@ -19,9 +19,9 @@ import 'package:http/http.dart' as http;
     try {
       if (connectivityResult.toString().replaceAll('[', '').replaceAll(']', '') ==            
           ConnectivityResult.none.toString()) {
-        Get.snackbar(
-            'No internet connection', "Please Check Your internet connection");
-        return null;
+        // Get.snackbar(
+        //     'No internet connection', "Please Check Your internet connection");
+       // return null;
       } else {
         final response = await http.get(url,headers: {});
         return _handleResponse(response);

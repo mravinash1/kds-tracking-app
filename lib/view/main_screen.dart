@@ -43,7 +43,7 @@ import 'package:get/get.dart';
           AppBar(
             title: const Text(
               'Kitchen Display System',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             centerTitle: true,
             backgroundColor: Colors.green[600],
@@ -62,7 +62,7 @@ import 'package:get/get.dart';
                     clipBehavior: Clip.none,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.notifications_none, size: 36, color: Colors.white),
+                        icon: const Icon(Icons.notifications_none, size: 30, color: Colors.white),
                         onPressed: () {
                           Get.to(NotificationKitchenScreen());
                         },
@@ -98,7 +98,7 @@ import 'package:get/get.dart';
                     clipBehavior: Clip.none,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.notifications_none, size: 36, color: Colors.white),
+                        icon: const Icon(Icons.notifications_none, size: 30, color: Colors.white),
                         onPressed: () {
                           Get.to(NotificationHotelScreen());
                         },

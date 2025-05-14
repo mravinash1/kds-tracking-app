@@ -48,7 +48,7 @@ class _NotificationKitchenScreenState extends State<NotificationKitchenScreen> {
             init: controller,
             builder: (context) {
               return ListView.builder(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.only(bottom: 45,left: 5,right: 5),
                 itemCount: controller.shopNoList.length,
                 itemBuilder: (context, index) {
                   var data = controller.filterKDS[index];

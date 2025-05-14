@@ -114,12 +114,41 @@ const LoginScreen({super.key});
                             //     ),
                             //   ],
                             // ),
+
+
                             const SizedBox(height: 15),
+
+
+    //   controller.isLoading
+    // ? CircularProgressIndicator(
+    //     color: Colors.white,
+    //   )
+    // : ElevatedButton(
+    //     onPressed: () {
+    //       controller.loginData();
+    //     },
+    //     child: Text(
+    //       'Login',
+    //       style: TextStyle(
+    //           color: Colors.black,
+    //           fontWeight: FontWeight.bold,
+    //           fontSize: 15),
+    //     ),
+    //   ),
+
+
 
                                Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
+
+                                controller.isLoading?CircularProgressIndicator(
+                                  color: Colors.white,
+                                ):
+
                                    ElevatedButton(onPressed: (){
+
+
                                   controller.loginData();
  
 

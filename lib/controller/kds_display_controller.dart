@@ -7,7 +7,6 @@ import 'package:billhosts/utils/notification_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';  
 import '../constants/endpoint.dart'; 
 import '../utils/api_service_class.dart';
@@ -81,7 +80,7 @@ Future fetchData() async {
         // If it's a new order
         if (prevItem.kot == null) {
           shouldPlaySound = true;
-        await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
+         //await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
 
           break;
         }
@@ -255,14 +254,5 @@ Future<void> updateOrderStatus({required int shopNumber, required int status, re
   }
 
 
-// Function to format date
-String _formatDate(String rawDate) {
-  try {
-    DateTime parsedDate = DateTime.parse(rawDate);
-    return DateFormat('yyyy-MM-dd HH:mm').format(parsedDate); // Format: YYYY-MM-DD HH:MM
-  } catch (e) {
-    return rawDate; // Return original if there's an error
-  }
-}
 
 }
