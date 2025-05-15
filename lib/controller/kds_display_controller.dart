@@ -80,9 +80,13 @@ Future fetchData() async {
         // If it's a new order
         if (prevItem.kot == null) {
           shouldPlaySound = true;
-         //await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
+          if(!_isFirstFetch){
+
+     //  await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
 
           break;
+        }
+        
         }
 
       //  If order/item was cancelled
