@@ -23,6 +23,7 @@ const LoginScreen({super.key});
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)
                           ),
+                          
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(20),
@@ -40,24 +41,24 @@ const LoginScreen({super.key});
                                   fontSize: 22, fontWeight: FontWeight.bold,color: Colors.white),
                             ),
                             const SizedBox(height: 20),
-                            DropdownButtonFormField<String>(
+                            // DropdownButtonFormField<String>(
                               
-                              decoration: InputDecoration(
-                                labelText: "Login As",labelStyle: TextStyle(color: Colors.white),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15)
-                                ),
+                            //   decoration: InputDecoration(
+                            //     labelText: "Login As",labelStyle: TextStyle(color: Colors.white),
+                            //     border: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(15)
+                            //     ),
 
-                              ),
-                              items: ['Admin', 'User', 'Waiter']
-                                  .map((role) => DropdownMenuItem(
-                                value: role,
-                                child: Text(role),
-                              ))
-                                  .toList(),
-                              onChanged: (value) {},
-                            ),
-                            const SizedBox(height: 15),
+                            //   ),
+                            //   items: ['Admin', 'User', 'Waiter']
+                            //       .map((role) => DropdownMenuItem(
+                            //     value: role,
+                            //     child: Text(role),
+                            //   ))
+                            //       .toList(),
+                            //   onChanged: (value) {},
+                            // ),
+                            // const SizedBox(height: 15),
 
                             TextFormField(
                               style: TextStyle(color: Colors.white),

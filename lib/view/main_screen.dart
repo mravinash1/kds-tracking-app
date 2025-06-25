@@ -1,6 +1,8 @@
 import 'package:billhosts/controller/hotel_screen_controller.dart';
 import 'package:billhosts/controller/kds_display_controller.dart';
 import 'package:billhosts/controller/login_controller.dart';
+import 'package:billhosts/utils/bluetooth_printer_helper.dart';
+import 'package:billhosts/utils/printer_selection.dart';
 import 'package:billhosts/view/hotel_screen/hotel_screen.dart';
 import 'package:billhosts/view/hotel_screen/notification_hotel_screen.dart';
 import 'package:billhosts/view/kichen_display/kichen_display.dart';
@@ -9,6 +11,8 @@ import 'package:billhosts/view/kichen_display/stock_update_screen.dart';
 import 'package:billhosts/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
   class MainScreen extends StatefulWidget {
   @override
@@ -18,17 +22,80 @@ import 'package:get/get.dart';
   class _MainScreenState extends State<MainScreen> {
   late KDSDisplayController controller;
   late HotelDisplayController hotelcontroller;
+  late LoginController loginController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    bool isLoading = true;
+    final BluetoothPrinterManager printerManager = BluetoothPrinterManager();
+
+
 
     @override
     void initState() {
     controller = Get.put(KDSDisplayController());
     hotelcontroller = Get.put(HotelDisplayController());
+    loginController = Get.put(LoginController());
+        _initializeControllers();
+
     super.initState();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_)async{
+     await printerManager.scanDevices();
+     showDialog(context: context, builder: (context)=>PrinterSelectionDialog(
+      printerManager: printerManager));
+
+    });
+
+
+
+
+
+
+
+
+
   }
 
+ Future<void> _initializeControllers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? storedUserId = prefs.getInt('userId');
+
+    if (storedUserId != null) {
+      final loginController = Get.put(LoginController());
+      loginController.userId = storedUserId;
+
+      controller = Get.put(KDSDisplayController());
+      hotelcontroller = Get.put(HotelDisplayController());
+
+      // If needed, call fetch methods
+      controller?.fetchData();
+      hotelcontroller?.fetchData();
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      Get.offAll(() => LoginScreen());
+    }
+  }
+
+
+      
+
+
+
   @override
-  Widget build(BuildContext context) {
+ // Widget build(BuildContext context) {
+
+Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+
+
+
     return DefaultTabController(
       length: 2,
       // ignore: deprecated_member_use
@@ -41,8 +108,9 @@ import 'package:get/get.dart';
           key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
           appBar: 
           AppBar(
-            title: const Text(
-              'Kitchen Display System',
+            title:  Text(
+             'Kitchen Display System',
+             
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             centerTitle: true,
@@ -198,25 +266,19 @@ import 'package:get/get.dart';
                    Get.to(() => ItemListScreen(shopId: shopId,));
                   },
                 ),
-                 
-                 
                   
-
                    const Divider(),
+                   
                    ListTile(
                    leading: const Icon(Icons.logout,color: Colors.black,),
                    title: const Text("Logout",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                   onTap: () {
-                   // Get.offAllNamed('/login'); // Clear stack and navigate to login
-                  Get.to(LoginScreen());
-                  
-
-                 
-
-
-                 
+                   onTap: () {              
+                 // Get.to(LoginScreen());
+                 loginController.logout();           
                   },
                 ),
+
+               
               ],
             ),
           ),

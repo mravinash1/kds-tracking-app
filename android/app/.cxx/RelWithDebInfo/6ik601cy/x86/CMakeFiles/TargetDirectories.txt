@@ -1,0 +1,2 @@
+F:/Digital_kranti_project2/billhosts/android/app/.cxx/RelWithDebInfo/6ik601cy/x86/CMakeFiles/edit_cache.dir
+F:/Digital_kranti_project2/billhosts/android/app/.cxx/RelWithDebInfo/6ik601cy/x86/CMakeFiles/rebuild_cache.dir

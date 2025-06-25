@@ -22,7 +22,7 @@ import 'dart:convert';
     super.onInit();
   }
 
-  void fetchItems() async {
+   void fetchItems() async {
     try {
       isLoading(true);
       final response = await http.get(

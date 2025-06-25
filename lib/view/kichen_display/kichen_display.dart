@@ -1,3 +1,4 @@
+import 'package:billhosts/utils/printer_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; 
 import 'package:intl/intl.dart';
@@ -31,7 +32,9 @@ const KitchenScreen({super.key});
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green.shade100, Colors.white],
+             // colors: [const Color.fromARGB(255, 38, 57, 39), Colors.white],
+               colors: [Colors.green[100]!, Colors.white],
+
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -140,16 +143,20 @@ const KitchenScreen({super.key});
                             ),
 
                             const Divider(),
+                            
 
                             // Items List Header
-                            Center(
+                             Center(
                               child: Text(
                                 'Order Items',
                                 style: TextStyle(fontSize: textScale * 17, fontWeight: FontWeight.bold,), 
                               ),
+
                             ),
 
+                             
 
+                             
                                     
 
 
@@ -311,7 +318,53 @@ const KitchenScreen({super.key});
                             ),
 
 
-                            
+                           // In KitchenScreen build method, add printer controls:
+
+       SizedBox(height: 4,),
+ 
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    // Printer selection button
+    IconButton(
+      icon: const Icon(Icons.bluetooth_searching,),
+      color: Colors.green,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => PrinterSelectionDialog(
+            printerManager: controller.printerManager,
+          ),
+        ).then((_) {
+          controller.printerManager.scanDevices();
+        });
+      },
+    ),
+    const SizedBox(width: 10),
+    // Print order button
+    Obx(() {
+      final isPrinting = controller.printerManager.isPrinting.value;
+      return ElevatedButton(
+        onPressed: isPrinting ? null : () => controller.printOrder(data),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        ),
+        child: isPrinting
+            ? const CircularProgressIndicator()
+            : const Text(
+                "Print Order",
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+      );
+    }),
+  ],
+),  
+                              
+                  
                           ],
                            
                         ),

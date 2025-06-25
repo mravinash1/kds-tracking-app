@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:billhosts/controller/login_controller.dart';
 import 'package:billhosts/models/filter_model_of_kds.dart';
 import 'package:billhosts/models/kds_display_models.dart';
-import 'package:billhosts/utils/notification_services.dart';
+import 'package:billhosts/utils/bluetooth_printer_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';  
 import '../constants/endpoint.dart'; 
 import '../utils/api_service_class.dart';
+
+
 
   class KDSDisplayController extends GetxController {
   final HttpService _apiService = HttpService(); 
@@ -80,13 +83,22 @@ Future fetchData() async {
         // If it's a new order
         if (prevItem.kot == null) {
           shouldPlaySound = true;
-          if(!_isFirstFetch){
 
      //  await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
 
-          break;
-        }
+       // break;
         
+        
+          // if (!_isFirstFetch) {
+          // await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
+          // }
+          // break;
+
+
+
+
+
+      
         }
 
       //  If order/item was cancelled
@@ -234,7 +246,7 @@ Future<void> updateOrderStatus({required int shopNumber, required int status, re
       Future.delayed(const Duration(seconds: 1), () => fetchData());
 
       
-      //  _playSound();
+      _playSound();
       
     } else {
       Get.snackbar("Error", "Failed to update order status");
@@ -259,4 +271,55 @@ Future<void> updateOrderStatus({required int shopNumber, required int status, re
 
 
 
+
+
+  final BluetoothPrinterManager printerManager = BluetoothPrinterManager();
+
+Future<void> printOrder(FilterModelOfKds orderGroup) async {
+  try {
+    // Prepare print data
+    final receiptBytes = await printerManager.generateReceipt(
+      shopNumber: orderGroup.shopvno,
+      date: _formatDate(orderGroup.orders.first.kot.kotdate.toString()),
+      time: orderGroup.orders.first.kot.kottime.toString(),
+      tableName: orderGroup.orders.first.kot.tablename.toString(),
+      waiterName: orderGroup.orders.first.kot.wname.toString(),
+      items: orderGroup.orders.map((order) {
+        return {
+          'name': order.kot.itname,
+          'qty': order.kot.qty,
+          'comment': order.kot.itcomment,
+          'pack': order.kot.havetopack == 1,
+        };
+      }).toList(),
+    );
+
+    // Print
+    await printerManager.printReceipt(receiptBytes);
+    
+    Get.snackbar("Success", "Order printed successfully");
+  } catch (e) {
+    Get.snackbar("Print Error", e.toString());
+    print(e.toString());
+
+  }
 }
+
+
+
+
+
+
+String _formatDate(String rawDate) {
+  try {
+    DateTime parsedDate = DateTime.parse(rawDate);
+    return DateFormat('yyyy-MM-dd').format(parsedDate);
+  } catch (e) {
+    return rawDate;
+  }
+}
+
+}
+
+
+

@@ -1,4 +1,5 @@
 import 'package:billhosts/controller/hotel_screen_controller.dart';
+import 'package:billhosts/utils/printer_selection_hotel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +25,8 @@ import 'package:intl/intl.dart';
     return 
     Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.all(1),
+
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -195,7 +197,69 @@ import 'package:intl/intl.dart';
                                                   color: Colors.black),
                                             ),
                                     ),
-                                  )
+                                    
+                                  ),
+
+ 
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+   // Printer selection button
+    IconButton(
+      icon: const Icon(Icons.bluetooth_searching),
+      color: Colors.green,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => PrinterSelectionHotelDialog(
+            printerManager: controller.printerManager,
+          ),
+        ).then((_) {
+          controller.printerManager.scanDevices();
+        });
+      },
+    ),
+    const SizedBox(width: 10),
+    // Print order button
+    Obx(() {
+      final isPrinting = controller.printerManager.isPrinting.value;
+      return ElevatedButton(
+        onPressed: isPrinting ? null : () => controller.printOrder(data),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        ),
+        child: isPrinting
+            ? const CircularProgressIndicator()
+            : const Text(
+                "Print Order",
+                style: TextStyle(color: Colors.black, fontSize: 16),
+              ),
+      );
+    }),
+  ],
+),  
+                              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 ],
                               ),
                             ),

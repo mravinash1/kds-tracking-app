@@ -8,6 +8,20 @@
 	<string>Billhosts</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+   
+   
+    <key>NSBluetoothAlwaysUsageDescription</key>
+<string>Need Bluetooth to connect to printer</string>
+<key>NSBluetoothPeripheralUsageDescription</key>
+<string>Need Bluetooth to connect to printer</string>
+<key>UIBackgroundModes</key>
+<array>
+    <string>bluetooth-central</string>
+    <string>bluetooth-peripheral</string>
+</array>
+
+     
+	
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
