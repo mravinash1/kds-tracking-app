@@ -148,7 +148,8 @@ class _KitchenScreenState extends State<HotelScreen> {
                                                   style: TextStyle(
                                                       color: Colors.red))
                                             ],
-                                          ),
+                                          ), 
+                                          ////////////
                                           Row(
                                             children: [
                                               Text(
