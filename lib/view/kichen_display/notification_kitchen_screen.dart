@@ -47,6 +47,24 @@ class _NotificationKitchenScreenState extends State<NotificationKitchenScreen> {
           child: GetBuilder<KDSDisplayController>(
             init: controller,
             builder: (context) {
+            if(controller.filterKDS.isEmpty){
+
+             return Center(
+              child: 
+              Text('No service available',
+              style: TextStyle(fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: Colors.grey
+              ),
+              ),
+             );
+
+            }
+
+
+
+
+
               return ListView.builder(
                 padding: const EdgeInsets.only(bottom: 45,left: 5,right: 5),
                 itemCount: controller.shopNoList.length,

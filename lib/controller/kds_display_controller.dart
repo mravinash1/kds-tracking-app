@@ -8,318 +8,389 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:just_audio/just_audio.dart';  
-import '../constants/endpoint.dart'; 
+import 'package:just_audio/just_audio.dart';
+import '../constants/endpoint.dart';
 import '../utils/api_service_class.dart';
 
-
-
-  class KDSDisplayController extends GetxController {
-  final HttpService _apiService = HttpService(); 
+class KDSDisplayController extends GetxController {
+  final HttpService _apiService = HttpService();
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-  List<KdsDisplayModel> kdslists = []; 
+  List<KdsDisplayModel> kdslists = [];
   List<FilterModelOfKds> filterKDS = [];
   List<KdsDisplayModel> previousKdsList = [];
 
   TextEditingController user1Controller = TextEditingController();
   TextEditingController user2Controller = TextEditingController();
 
-  LoginController loginController=Get.put(LoginController());
-  List<int> shopNoList=[];
-  List<Order> order = []; 
-  bool isLoading = false;  
+  LoginController loginController = Get.put(LoginController());
+  List<int> shopNoList = [];
+  List<Order> order = [];
+  bool isLoading = false;
   var isAccepted = false.obs;
   bool isLoadingUpdateStatus = false;
   var notificationCount = 0.obs;
   Timer? _timer;
-  int previousOrderCount = 0; 
-  bool _isFirstFetch = true; 
+  int previousOrderCount = 0;
+  bool _isFirstFetch = true;
+  int dayCloseType = 0;
 
-
-  
   @override
   void onInit() {
     super.onInit();
+    loadDayCloseType();
+
     fetchData();
     _timer = Timer.periodic(const Duration(seconds: 5), (_) => fetchData());
   }
 
-
-
   @override
-  void onClose() { 
-    if(_timer != null) {
+  void onClose() {
+    if (_timer != null) {
       _timer!.cancel();
       _timer = null;
     }
     super.onClose();
-  }  
+  }
 
-  
+  Future<void> loadDayCloseType() async {
+    dayCloseType = await loginController.getDayCloseType();
+    update();
+  }
 
+  Future fetchData() async {
+    isLoading = true;
+    update();
 
-Future fetchData() async {
-  isLoading = true;
-  update();
+    try {
+      var data = await _apiService.get(
+          "${AppConstants.kdsdisplay}${loginController.userId}/${loginController.userId}/0/1");
 
-  try {
-    var data = await _apiService.get("${AppConstants.kdsdisplay}${loginController.userId}/${loginController.userId}/0/1");
+      if (data != null) {
+        List<KdsDisplayModel> newKdsList = List<KdsDisplayModel>.from(
+            data.map((x) => KdsDisplayModel.fromJson(x)));
 
-    if (data != null) {
-      List<KdsDisplayModel> newKdsList = List<KdsDisplayModel>.from(data.map((x) => KdsDisplayModel.fromJson(x)));
+        int newOrders = filterKDS.length;
 
-      int newOrders = filterKDS.length;
+        bool shouldPlaySound = false;
 
-      bool shouldPlaySound = false;
+        // Compare new and previous data to detect any important changes
+        for (var newItem in newKdsList) {
+          var prevItem = previousKdsList.firstWhere(
+            (element) => element.kot?.id == newItem.kot?.id,
+            orElse: () => KdsDisplayModel(kot: null),
+          );
 
-      // Compare new and previous data to detect any important changes
-      for (var newItem in newKdsList) {
-        var prevItem = previousKdsList.firstWhere(
-          (element) => element.kot?.id == newItem.kot?.id,
-          orElse: () => KdsDisplayModel(kot: null),
-        );
+          // If it's a new order
+          if (prevItem.kot == null) {
+            shouldPlaySound = true;
 
-        // If it's a new order
-        if (prevItem.kot == null) {
-          shouldPlaySound = true;
+            //  await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
 
-     //  await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
+            // break;
 
-       // break;
-        
-        
-          // if (!_isFirstFetch) {
-          // await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
-          // }
-          // break;
+            // if (!_isFirstFetch) {
+            // await NotificationService.showNotification('New Order', '${newItem.kot?.shopvno} Kot No');
+            // }
+            // break;
+          }
 
+          //  If order/item was cancelled
 
+          if (newItem.kot?.status == 2 && prevItem.kot?.status != 2) {
+            shouldPlaySound = true;
+            break;
+          }
 
-
-
-      
-        }
-
-      //  If order/item was cancelled
-
-        if (newItem.kot?.status == 2 && prevItem.kot?.status != 2) {
-          shouldPlaySound = true;
-          break;
-        }
-
-        // If item name or table name was updated
-        if (newItem.kot?.qty != prevItem.kot?.qty ||
-            newItem.kot?.tablename != prevItem.kot?.tablename
-
-            ) {
-          shouldPlaySound = true;
-          break;
-        }
-      }
-
-      if (!_isFirstFetch && shouldPlaySound) {
-        await _playSound();
-      }
-
-      previousKdsList = newKdsList; // Update the snapshot
-
-      kdslists = newKdsList;
-      notificationCount.value = newOrders;
-      previousOrderCount = newOrders;
-      _isFirstFetch = false;
-
-      // Process shop list
-      shopNoList.clear();
-      for (var item in kdslists) {
-        if (!shopNoList.contains(item.kot?.shopvno)) {
-          shopNoList.add(item.kot!.shopvno!);
-        }
-      }
-
-      // Organize orders
-      filterKDS.clear();
-      for (var shopNo in shopNoList) {
-        filterKDS.add(FilterModelOfKds(shopvno: shopNo, orders: []));
-      }
-
-      for (var filter in filterKDS) {
-        for (var item in kdslists) {
-          if (item.kot != null && item.kot!.shopvno == filter.shopvno) {
-            var kotData = KotData(
-              havetopack: item.kot!.havetopack,
-              id: item.kot!.id!,
-              shopid: item.kot!.shopid!,
-              itemremarks: item.kot!.itemremarks,
-              shopvno: item.kot!.shopvno!,
-              kotdate: item.kot!.kotdate!,
-              kottime: item.kot!.kottime!,
-              timeotp: item.kot!.timeotp!,
-              kottype: item.kot!.kottype!,
-              rawcode: item.kot!.rawcode!,
-              qty: item.kot!.qty,
-              status: item.kot!.status!,
-              blno: item.kot!.blno,
-              tablecode: item.kot!.tablecode,
-              tablename: item.kot!.tablename,
-              itname: item.kot!.itname,
-              barcode: item.kot!.barcode,
-              itemview: item.kot!.itemview,
-              discperc: item.kot!.discperc,
-              rate: item.kot!.rate,
-              vat: item.kot!.vat,
-              vatamt: item.kot!.vatamt,
-              gst: item.kot!.gst,
-              gstamt: item.kot!.gstamt,
-              ittotal: item.kot!.ittotal,
-              discamt: item.kot!.discamt,
-              totqty: item.kot!.totqty,
-              totgst: item.kot!.totgst,
-              totdiscamt: item.kot!.totdiscamt,
-              roundoff: item.kot!.roundoff,
-              totordamt: item.kot!.totordamt,
-              cess: item.kot!.cess,
-              cessamt: item.kot!.cessamt,
-              kitchenmessage: item.kot!.kitchenmessage,
-              isdiscountable: item.kot!.isdiscountable,
-              servicechperc: item.kot!.servicechperc,
-              servicechamt: item.kot!.servicechamt,
-              totalservicechamt: item.kot!.totalservicechamt,
-              taxableamt: item.kot!.taxableamt,
-              totaltaxableamt: item.kot!.totaltaxableamt,
-              wcode: item.kot!.wcode,
-              wname: item.kot!.wname,
-              nop: item.kot!.nop,
-              bldiscperc: item.kot!.bldiscperc,
-              bldiscamt: item.kot!.bldiscamt,
-              itcomment: item.kot!.itcomment,
-              cancelreason: item.kot!.cancelreason,
-              bldlvchperc: item.kot!.bldlvchperc,
-              bldlvchamt: item.kot!.bldlvchamt,
-              bldlvchamount: item.kot!.bldlvchamount,
-              flatdiscount: item.kot!.flatdiscount,
-              kdsstatus: item.kot!.kdsstatus,
-            );
-
-            filter.orders.add(Order(
-              kot: kotData,
-              statusName: item.statusName.toString(),
-              kottypeName: item.kottypeName.toString(),
-              kitchenName: item.kitchenName.toString(),
-              UnitName: item.UnitName.toString(),
-            ));
+          // If item name or table name was updated
+          if (newItem.kot?.qty != prevItem.kot?.qty ||
+              newItem.kot?.tablename != prevItem.kot?.tablename) {
+            shouldPlaySound = true;
+            break;
           }
         }
-      }
 
+        if (!_isFirstFetch && shouldPlaySound) {
+          await _playSound();
+        }
+
+        previousKdsList = newKdsList; // Update the snapshot
+
+        kdslists = newKdsList;
+        notificationCount.value = newOrders;
+        previousOrderCount = newOrders;
+        _isFirstFetch = false;
+
+        // Process shop list
+        shopNoList.clear();
+        for (var item in kdslists) {
+          if (!shopNoList.contains(item.kot?.shopvno)) {
+            shopNoList.add(item.kot!.shopvno!);
+          }
+        }
+
+        // Organize orders
+        filterKDS.clear();
+        for (var shopNo in shopNoList) {
+          filterKDS.add(FilterModelOfKds(shopvno: shopNo, orders: []));
+        }
+
+        for (var filter in filterKDS) {
+          for (var item in kdslists) {
+            if (item.kot != null && item.kot!.shopvno == filter.shopvno) {
+              var kotData = KotData(
+                havetopack: item.kot!.havetopack,
+                id: item.kot!.id!,
+                shopid: item.kot!.shopid!,
+                itemremarks: item.kot!.itemremarks,
+                shopvno: item.kot!.shopvno!,
+                kotdate: item.kot!.kotdate!,
+                kottime: item.kot!.kottime!,
+                timeotp: item.kot!.timeotp!,
+                kottype: item.kot!.kottype!,
+                rawcode: item.kot!.rawcode!,
+                qty: item.kot!.qty,
+                status: item.kot!.status!,
+                blno: item.kot!.blno,
+                tablecode: item.kot!.tablecode,
+                tablename: item.kot!.tablename,
+                itname: item.kot!.itname,
+                barcode: item.kot!.barcode,
+                itemview: item.kot!.itemview,
+                discperc: item.kot!.discperc,
+                rate: item.kot!.rate,
+                vat: item.kot!.vat,
+                vatamt: item.kot!.vatamt,
+                gst: item.kot!.gst,
+                gstamt: item.kot!.gstamt,
+                ittotal: item.kot!.ittotal,
+                discamt: item.kot!.discamt,
+                totqty: item.kot!.totqty,
+                totgst: item.kot!.totgst,
+                totdiscamt: item.kot!.totdiscamt,
+                roundoff: item.kot!.roundoff,
+                totordamt: item.kot!.totordamt,
+                cess: item.kot!.cess,
+                cessamt: item.kot!.cessamt,
+                kitchenmessage: item.kot!.kitchenmessage,
+                isdiscountable: item.kot!.isdiscountable,
+                servicechperc: item.kot!.servicechperc,
+                servicechamt: item.kot!.servicechamt,
+                totalservicechamt: item.kot!.totalservicechamt,
+                taxableamt: item.kot!.taxableamt,
+                totaltaxableamt: item.kot!.totaltaxableamt,
+                wcode: item.kot!.wcode,
+                wname: item.kot!.wname,
+                nop: item.kot!.nop,
+                bldiscperc: item.kot!.bldiscperc,
+                bldiscamt: item.kot!.bldiscamt,
+                itcomment: item.kot!.itcomment,
+                cancelreason: item.kot!.cancelreason,
+                bldlvchperc: item.kot!.bldlvchperc,
+                bldlvchamt: item.kot!.bldlvchamt,
+                bldlvchamount: item.kot!.bldlvchamount,
+                flatdiscount: item.kot!.flatdiscount,
+                kdsstatus: item.kot!.kdsstatus,
+              );
+
+              filter.orders.add(Order(
+                kot: kotData,
+                statusName: item.statusName.toString(),
+                kottypeName: item.kottypeName.toString(),
+                kitchenName: item.kitchenName.toString(),
+                UnitName: item.UnitName.toString(),
+              ));
+            }
+          }
+        }
+
+        isLoading = false;
+        update();
+      }
+    } catch (e) {
       isLoading = false;
       update();
+      // debugPrint("Error: $e");
     }
-  } catch (e) {
-    isLoading = false;
-    update();
-   // debugPrint("Error: $e");
   }
-}
 
+  // Future<void> updateOrderStatus(
+  //     {required int shopNumber,
+  //     required int status,
+  //     required int orderIndex}) async {
+  //   final url =
+  //       "https://hotelserver.billhost.co.in/KDSDisplayUpdateStatus/${loginController.userId}/$shopNumber/$status";
 
+  //   isLoadingUpdateStatus = true;
+  //   filterKDS[orderIndex].orders.first.kot.isLoading = true;
+  //   update();
 
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: {"Content-Type": "application/json"},
+  //       body: jsonEncode({"status": "Ready"}),
+  //     );
 
+  //     if (response.statusCode == 200) {
+  //       Future.delayed(const Duration(seconds: 1), () => fetchData());
 
+  //       _playSound();
+  //     } else {
+  //       Get.snackbar("Error", "Failed to update order status");
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar("Error", "Something went wrong");
+  //   } finally {
+  //     isLoadingUpdateStatus = false;
+  //     update();
+  //   }
+  // }
 
-Future<void> updateOrderStatus({required int shopNumber, required int status, required int orderIndex}) async {
-  final url = "https://hotelserver.billhost.co.in/KDSDisplayUpdateStatus/${loginController.userId}/$shopNumber/$status";
+  Future<void> updateOrderStatus({
+    required int shopNumber,
+    required int status,
+    required int orderIndex,
+  }) async {
+    final url =
+        //  "https://hotelserver.billhost.co.in/KDSDisplayUpdateStatus/${loginController.userId}/$shopNumber/$status";
 
-  isLoadingUpdateStatus = true;
-  filterKDS[orderIndex].orders.first.kot.isLoading = true;
-  update();
-  
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"status": "Ready"}),
-    );
+        "${AppConstants.baseUrl}KDSDisplayUpdateStatus/${loginController.userId}/$shopNumber/$status";
 
-    if (response.statusCode == 200) {
-      
-      Future.delayed(const Duration(seconds: 1), () => fetchData());
+    isLoadingUpdateStatus = true;
+    filterKDS[orderIndex].orders.first.kot.isLoading = true;
+    update();
 
-      
-      _playSound();
-      
-    } else {
-      Get.snackbar("Error", "Failed to update order status");
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"status": status == 0 ? "Accepted" : "Ready"}),
+      );
+
+      if (response.statusCode == 200) {
+        // Local update - accept hone pe items hide mat karo
+        for (var order in filterKDS[orderIndex].orders) {
+          // order.kot.kdsstatus = status;  // agar int hota to yeh, lekin ab string assume
+        }
+
+        _playSound();
+        Get.snackbar("Success", status == 0 ? "Order Accepted" : "Order Ready",
+            backgroundColor: Colors.green);
+      } else {
+        Get.snackbar("Error", "Failed to update status");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong");
+    } finally {
+      isLoadingUpdateStatus = false;
+      update();
     }
-  } catch (e) {
-    Get.snackbar("Error", "Something went wrong");
-  } finally {
-    isLoadingUpdateStatus = false;
-    update();
   }
-}
 
-
-
-  
-    // Function to play sound
+  // Function to play sound
 
   Future<void> _playSound() async {
     await _audioPlayer.setAsset('assets/readytone.mp3');
     _audioPlayer.play();
   }
 
-
-
-
-
   final BluetoothPrinterManager printerManager = BluetoothPrinterManager();
 
-Future<void> printOrder(FilterModelOfKds orderGroup) async {
-  try {
-    // Prepare print data
-    final receiptBytes = await printerManager.generateReceipt(
-      shopNumber: orderGroup.shopvno,
-      date: _formatDate(orderGroup.orders.first.kot.kotdate.toString()),
-      time: orderGroup.orders.first.kot.kottime.toString(),
-      tableName: orderGroup.orders.first.kot.tablename.toString(),
-      waiterName: orderGroup.orders.first.kot.wname.toString(),
-      items: orderGroup.orders.map((order) {
-        return {
-          'name': order.kot.itname,
-          'qty': order.kot.qty,
-          'comment': order.kot.itcomment,
-          'pack': order.kot.havetopack == 1,
-        };
-      }).toList(),
-    );
+  Future<void> printOrder(FilterModelOfKds orderGroup) async {
+    try {
+      // Prepare print data
+      final receiptBytes = await printerManager.generateReceipt(
+        shopNumber: orderGroup.shopvno,
+        date: _formatDate(orderGroup.orders.first.kot.kotdate.toString()),
+        time: orderGroup.orders.first.kot.kottime.toString(),
+        tableName: orderGroup.orders.first.kot.tablename.toString(),
+        waiterName: orderGroup.orders.first.kot.wname.toString(),
+        items: orderGroup.orders.map((order) {
+          return {
+            'name': order.kot.itname,
+            'qty': order.kot.qty,
+            'comment': order.kot.itcomment,
+            'pack': order.kot.havetopack == 1,
+          };
+        }).toList(),
+      );
 
-    // Print
-    await printerManager.printReceipt(receiptBytes);
-    
-    Get.snackbar("Success", "Order printed successfully");
-  } catch (e) {
-    Get.snackbar("Print Error", e.toString());
-    print(e.toString());
+      // Print
+      await printerManager.printReceipt(receiptBytes);
 
+      Get.snackbar("Success", "Order printed successfully");
+    } catch (e) {
+      Get.snackbar("Print Error", e.toString());
+      print(e.toString());
+    }
+  }
+
+  String _formatDate(String rawDate) {
+    try {
+      DateTime parsedDate = DateTime.parse(rawDate);
+      return DateFormat('yyyy-MM-dd').format(parsedDate);
+    } catch (e) {
+      return rawDate;
+    }
+  }
+
+// Existing code ke neeche add karo (printOrder ke baad ya updateOrderStatus ke neeche)
+
+  Future<void> markSingleItemAsReady({
+    required int shopNumber,
+    required String rawcode,
+    required int groupIndex,
+    required int itemIndex,
+  }) async {
+    if (rawcode.isEmpty) {
+      Get.snackbar("Error", "Item rawcode missing",
+          backgroundColor: Colors.orange);
+      return;
+    }
+
+    // final url = "https://hotelserver.billhost.co.in/KDSDisplayMarkItemAsReady/""${loginController.userId}/$shopNumber/0/$rawcode";
+    final url =
+        "${AppConstants.baseUrl}KDSDisplayMarkItemAsReady/${loginController.userId}/$shopNumber/0/$rawcode";
+
+    try {
+      final response = await http.post(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        // Local UI update (real backend status fetchData se aayega)
+        final order = filterKDS[groupIndex].orders[itemIndex];
+        order.kot.isItemReady = true;
+
+        // Check if all items in this group are ready
+        final group = filterKDS[groupIndex];
+
+        bool allReady = group.orders.every((o) =>
+            o.kot.isItemReady ||
+            (o.kot.kdsstatus?.toString().toLowerCase().contains('ready') ??
+                false) ||
+            (o.kot.qty ?? 0) <= 0);
+
+        if (allReady) {
+          // Optional: pura group hata do (comment out agar nahi chahiye)
+          // filterKDS.removeAt(groupIndex);
+          Get.snackbar(
+              "Order Complete", "All items ready in KOT ${group.shopvno}",
+              backgroundColor: Colors.green[800]);
+        }
+
+        update(); // UI refresh
+
+        Get.snackbar("Success", "Item marked as ready",
+            backgroundColor: Colors.green);
+
+        // Server se latest data laane ke liye thodi der baad refresh
+        Future.delayed(const Duration(seconds: 2), () => fetchData());
+      } else {
+        Get.snackbar("Failed", "API error: ${response.statusCode}",
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar("Network Error", e.toString(), backgroundColor: Colors.red);
+    }
   }
 }
-
-
-
-
-
-
-String _formatDate(String rawDate) {
-  try {
-    DateTime parsedDate = DateTime.parse(rawDate);
-    return DateFormat('yyyy-MM-dd').format(parsedDate);
-  } catch (e) {
-    return rawDate;
-  }
-}
-
-}
-
-
-

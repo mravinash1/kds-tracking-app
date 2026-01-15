@@ -7,6 +7,63 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:476474245368:android:93d466761d55dfbf813b0d",
+        "android_client_info": {
+          "package_name": "com.billhost.kdsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_McmKhKbs2o7F0pLyLUm-kE5XNQIGhfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476474245368:android:aa6446138c7740eb813b0d",
+        "android_client_info": {
+          "package_name": "com.billhost.software"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_McmKhKbs2o7F0pLyLUm-kE5XNQIGhfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476474245368:android:246f95c667ec0860813b0d",
+        "android_client_info": {
+          "package_name": "com.billhost.waiterapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_McmKhKbs2o7F0pLyLUm-kE5XNQIGhfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:476474245368:android:c3d91bed091e6bd6813b0d",
         "android_client_info": {
           "package_name": "com.example.billhosts"

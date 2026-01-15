@@ -3,6 +3,7 @@ import 'package:billhosts/controller/kds_display_controller.dart';
 import 'package:billhosts/controller/login_controller.dart';
 import 'package:billhosts/utils/bluetooth_printer_helper.dart';
 import 'package:billhosts/utils/printer_selection.dart';
+import 'package:billhosts/view/clubitem/club_item_screen.dart';
 import 'package:billhosts/view/hotel_screen/hotel_screen.dart';
 import 'package:billhosts/view/hotel_screen/notification_hotel_screen.dart';
 import 'package:billhosts/view/kichen_display/kichen_display.dart';
@@ -13,49 +14,38 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-  class MainScreen extends StatefulWidget {
+class MainScreen extends StatefulWidget {
   @override
   State<MainScreen> createState() => _MainScreenState();
-  }
+}
 
-  class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> {
   late KDSDisplayController controller;
   late HotelDisplayController hotelcontroller;
   late LoginController loginController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-    bool isLoading = true;
-    final BluetoothPrinterManager printerManager = BluetoothPrinterManager();
+  bool isLoading = true;
+  final BluetoothPrinterManager printerManager = BluetoothPrinterManager();
 
-
-
-    @override
-    void initState() {
+  @override
+  void initState() {
     controller = Get.put(KDSDisplayController());
     hotelcontroller = Get.put(HotelDisplayController());
     loginController = Get.put(LoginController());
-        _initializeControllers();
+    _initializeControllers();
 
     super.initState();
-    
-    WidgetsBinding.instance.addPostFrameCallback((_)async{
-     await printerManager.scanDevices();
-     showDialog(context: context, builder: (context)=>PrinterSelectionDialog(
-      printerManager: printerManager));
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await printerManager.scanDevices();
+      showDialog(
+          context: context,
+          builder: (context) =>
+              PrinterSelectionDialog(printerManager: printerManager));
     });
-
-
-
-
-
-
-
-
-
   }
 
- Future<void> _initializeControllers() async {
+  Future<void> _initializeControllers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? storedUserId = prefs.getInt('userId');
 
@@ -65,8 +55,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
       controller = Get.put(KDSDisplayController());
       hotelcontroller = Get.put(HotelDisplayController());
-
-      // If needed, call fetch methods
       controller?.fetchData();
       hotelcontroller?.fetchData();
 
@@ -78,26 +66,16 @@ import 'package:shared_preferences/shared_preferences.dart';
     }
   }
 
-
-      
-
-
-
   @override
- // Widget build(BuildContext context) {
-
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-
-
-
     return DefaultTabController(
-      length: 2,
+      length: 3,
       // ignore: deprecated_member_use
       child: WillPopScope(
         onWillPop: () async {
@@ -105,13 +83,15 @@ Widget build(BuildContext context) {
           return false;
         },
         child: Scaffold(
-          key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
-          appBar: 
-          AppBar(
-            title:  Text(
-             'Kitchen Display System',
-             
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          key: _scaffoldKey,
+
+          appBar: AppBar(
+            title: Text(
+              'Kitchen Display System',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.white),
             ),
             centerTitle: true,
             backgroundColor: Colors.green[600],
@@ -121,7 +101,10 @@ Widget build(BuildContext context) {
               onTap: () {
                 _scaffoldKey.currentState?.openDrawer();
               },
-              child: const Icon(Icons.menu),
+              child: const Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
             ),
 
             actions: [
@@ -130,7 +113,8 @@ Widget build(BuildContext context) {
                     clipBehavior: Clip.none,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.notifications_none, size: 30, color: Colors.white),
+                        icon: const Icon(Icons.notifications_none,
+                            size: 30, color: Colors.white),
                         onPressed: () {
                           Get.to(NotificationKitchenScreen());
                         },
@@ -141,7 +125,8 @@ Widget build(BuildContext context) {
                           top: 4,
                           child: Container(
                             padding: const EdgeInsets.all(5),
-                            constraints: const BoxConstraints(minWidth: 22, minHeight: 22),
+                            constraints: const BoxConstraints(
+                                minWidth: 22, minHeight: 22),
                             decoration: BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
@@ -166,7 +151,8 @@ Widget build(BuildContext context) {
                     clipBehavior: Clip.none,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.notifications_none, size: 30, color: Colors.white),
+                        icon: const Icon(Icons.notifications_none,
+                            size: 30, color: Colors.white),
                         onPressed: () {
                           Get.to(NotificationHotelScreen());
                         },
@@ -177,14 +163,16 @@ Widget build(BuildContext context) {
                           top: 4,
                           child: Container(
                             padding: const EdgeInsets.all(5),
-                            constraints: const BoxConstraints(minWidth: 22, minHeight: 22),
+                            constraints: const BoxConstraints(
+                                minWidth: 22, minHeight: 22),
                             decoration: BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 2),
                             ),
                             child: Text(
-                              hotelcontroller.notificationCount.value.toString(),
+                              hotelcontroller.notificationCount.value
+                                  .toString(),
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
@@ -199,27 +187,28 @@ Widget build(BuildContext context) {
             ],
 
             bottom: TabBar(
-            indicatorSize: TabBarIndicatorSize.tab,
-          
+              indicatorSize: TabBarIndicatorSize.tab,
               labelColor: Colors.white,
               indicatorColor: Colors.white,
               tabs: const [
                 Tab(
                   child: Text(
                     'Restaurant',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                 ),
-                
                 Tab(
                   child: Text(
                     'Room Services',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                   ),
                 ),
-                  
-
-
+                Tab(
+                  child: Text(
+                    'Bulk items',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                ),
               ],
             ),
           ),
@@ -229,56 +218,50 @@ Widget build(BuildContext context) {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                // UserAccountsDrawerHeader(
-                //   accountName: Text("BillHost",),
-                //   accountEmail: const Text(""),
-                //   currentAccountPicture: CircleAvatar(
-                //     backgroundColor: Colors.white,
-                //     child: Text(
-                //       "BH",
-                //       style: TextStyle(fontSize: 24, color: Colors.green[600]),
-                //     ),
-                //   ),
-                //   decoration: BoxDecoration(color: Colors.green[600]),
-                // ),
-
-
-                UserAccountsDrawerHeader(accountName: Text('Bill-Host'),
-                 accountEmail: Text(''),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage('assets/billhost.png'),
-                  backgroundColor: Colors.white,
+                UserAccountsDrawerHeader(
+                  accountName: Text('Bill-Host'),
+                  accountEmail: Text(''),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: AssetImage('assets/billhost.png'),
+                    backgroundColor: Colors.white,
+                  ),
+                  decoration: BoxDecoration(color: Colors.green[600]),
                 ),
-                decoration: BoxDecoration(color: Colors.green[600]),
-                ),
-                
-
-
-
                 ListTile(
-               //   leading: const Icon(Icons.info_outline,color: Colors.black,),
-               leading: const Icon(Icons.trending_up_outlined,color: Colors.black,),
-                  title: const Text("Items Stock update",style: TextStyle(color: Colors.black),),
+                  //   leading: const Icon(Icons.info_outline,color: Colors.black,),
+                  leading: const Icon(
+                    Icons.trending_up_outlined,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Items Stock update",
+                    style: TextStyle(color: Colors.black),
+                  ),
                   onTap: () {
-                     final loginController = Get.find<LoginController>();
+                    final loginController = Get.find<LoginController>();
                     int shopId = loginController.userId;
 
-                   Get.to(() => ItemListScreen(shopId: shopId,));
+                    Get.to(() => ItemListScreen(
+                          shopId: shopId,
+                        ));
                   },
                 ),
-                  
-                   const Divider(),
-                   
-                   ListTile(
-                   leading: const Icon(Icons.logout,color: Colors.black,),
-                   title: const Text("Logout",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                   onTap: () {              
-                 // Get.to(LoginScreen());
-                 loginController.logout();           
+                const Divider(),
+                ListTile(
+                  leading: const Icon(
+                    Icons.logout,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Logout",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    // Get.to(LoginScreen());
+                    loginController.logout();
                   },
                 ),
-
-               
               ],
             ),
           ),
@@ -288,11 +271,11 @@ Widget build(BuildContext context) {
             children: [
               KitchenScreen(),
               HotelScreen(),
+              ClubItemScreen(),
             ],
           ),
         ),
       ),
     );
-  
-}
+  }
 }

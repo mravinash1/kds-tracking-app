@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
@@ -42,10 +43,26 @@ class NotificationService {
 
 
 
+// Future<void> requestNotificationPermission() async {
+//   if (Platform.isAndroid) {
+//     // On Android 13 (API 33) and above, this permission is required.
+//     if (await Permission.notification.isDenied || await Permission.notification.isPermanentlyDenied) {
+//       PermissionStatus status = await Permission.notification.request();
+
+//       if (status.isGranted) {
+//         print("Notification permission granted.");
+//       } else {
+//         print("Notification permission denied.");
+//       }
+//     }
+//   }
+
+
 Future<void> requestNotificationPermission() async {
-  if (Platform.isAndroid) {
-    // On Android 13 (API 33) and above, this permission is required.
-    if (await Permission.notification.isDenied || await Permission.notification.isPermanentlyDenied) {
+  // ✅ Guard against web
+  if (!kIsWeb && Platform.isAndroid) {
+    if (await Permission.notification.isDenied ||
+        await Permission.notification.isPermanentlyDenied) {
       PermissionStatus status = await Permission.notification.request();
 
       if (status.isGranted) {
@@ -54,5 +71,10 @@ Future<void> requestNotificationPermission() async {
         print("Notification permission denied.");
       }
     }
+  } else {
+    print("Skipping notification permission request (not Android or running on Web).");
   }
 }
+
+
+

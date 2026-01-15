@@ -13,10 +13,11 @@ class ItemListScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar( 
+      appBar: AppBar(
         backgroundColor: const Color.fromRGBO(0, 0, 0, 1),
         centerTitle: true,
-        title: Text("Items Stock Update", style: TextStyle(color: Colors.white)),
+        title:
+            Text("Items Stock Update", style: TextStyle(color: Colors.white)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Get.back(),
@@ -34,7 +35,8 @@ class ItemListScreen extends StatelessWidget {
                 prefixIcon: Icon(Icons.search, color: Colors.white),
                 filled: true,
                 fillColor: Colors.grey[800],
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onChanged: (value) => itemController.searchQuery.value = value,
             ),
@@ -49,65 +51,51 @@ class ItemListScreen extends StatelessWidget {
                 itemCount: itemController.filteredItems.length,
                 itemBuilder: (context, index) {
                   final item = itemController.filteredItems[index];
-                  return 
-                
-                  Card(
-              color: Colors.grey[900],
-              child: ListTile(
-                title: Text(item.itname, style: TextStyle(color: Colors.white)),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+                  return Card(
+                    color: Colors.grey[900],
+                    child: ListTile(
+                      title: Text(item.itname,
+                          style: TextStyle(color: Colors.white)),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Text(
+                          //   item.kitchenstatus == 1 ? "Disabled" : "Active",
+                          //   style: TextStyle(color: Colors.white),
+                          // ),
 
+                          // Switch(
+                          //   value: item.kitchenstatus == 0,
+                          //   onChanged: (_) {
+                          //     itemController.toggleKitchenStatus(index);
+                          //   },
+                          //   activeColor: Colors.green,
+                          //   inactiveThumbColor: Colors.red,
+                          // ),
 
-                    // Text(
-                    //   item.kitchenstatus == 1 ? "Disabled" : "Active",
-                    //   style: TextStyle(color: Colors.white),
-                    // ),
+                          Text(
+                            item.kitchenstatus == 1 ? "Disabled" : "Active",
+                            style: TextStyle(color: Colors.white),
+                          ),
 
-                    // Switch(
-                    //   value: item.kitchenstatus == 0,  
-                    //   onChanged: (_) {
-                    //     itemController.toggleKitchenStatus(index);
-                    //   },
-                    //   activeColor: Colors.green,
-                    //   inactiveThumbColor: Colors.red,
-                    // ),
-                    
-
-                    
-                                              
-
-
-                    
-
-                    
-                    Text(
-                      item.kitchenstatus == 1 ? "Disabled" : "Active",
-                      style: TextStyle(color: Colors.white),
+                          Switch(
+                            value: item.kitchenstatus == 0,
+                            onChanged: (_) {
+                              // Search by ID in full list to get the correct index
+                              final originalIndex = itemController.items
+                                  .indexWhere((e) => e.id == item.id);
+                              if (originalIndex != -1) {
+                                itemController
+                                    .toggleKitchenStatus(originalIndex);
+                              }
+                            },
+                            activeColor: Colors.green,
+                            inactiveThumbColor: Colors.red,
+                          ),
+                        ],
+                      ),
                     ),
-
-                     Switch(
-                 value: item.kitchenstatus == 0,
-                 onChanged: (_) {
-    // Search by ID in full list to get the correct index
-    final originalIndex = itemController.items.indexWhere((e) => e.id == item.id);
-    if (originalIndex != -1) {
-      itemController.toggleKitchenStatus(originalIndex);
-    }
-  },
-  activeColor: Colors.green,
-  inactiveThumbColor: Colors.red,
-),
-
-
-
-   
-
-                  ],
-                ),
-              ),
-            );
+                  );
                 },
               );
             }),
@@ -117,4 +105,3 @@ class ItemListScreen extends StatelessWidget {
     );
   }
 }
-      

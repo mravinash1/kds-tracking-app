@@ -1,105 +1,103 @@
 import 'dart:convert';
 
-    class KdsHotelModel {
-    final Kot kot;
-    final String kitchenName;
-    dynamic UnitName;
+class KdsHotelModel {
+  final Kot kot;
+  final String kitchenName;
+  dynamic UnitName;
 
-    KdsHotelModel({
-        required this.kot,
-        required this.kitchenName,
-        required this.UnitName,
-    });
+  KdsHotelModel({
+    required this.kot,
+    required this.kitchenName,
+    required this.UnitName,
+  });
 
-    factory KdsHotelModel.fromRawJson(String str) => KdsHotelModel.fromJson(json.decode(str));
+  factory KdsHotelModel.fromRawJson(String str) =>
+      KdsHotelModel.fromJson(json.decode(str));
 
-    String toRawJson() => json.encode(toJson());
+  String toRawJson() => json.encode(toJson());
 
-    factory KdsHotelModel.fromJson(Map<String, dynamic> json) => KdsHotelModel(
+  factory KdsHotelModel.fromJson(Map<String, dynamic> json) => KdsHotelModel(
         kot: Kot.fromJson(json["kot"]),
         kitchenName: json["kitchenName"],
         UnitName: json["UnitName"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
-        "kot": kot.toJson(),
-        "kitchenName": kitchenName,
-        "UnitName":UnitName
-    };
+  Map<String, dynamic> toJson() =>
+      {"kot": kot.toJson(), "kitchenName": kitchenName, "UnitName": UnitName};
 }
 
 class Kot {
-    final int? id;
-    final int? chid;
-    final int? rcode;
-    final dynamic? roomnoview;
-    final DateTime? orddate;
-    final String? ordtime;
-    final int? deptcode;
-    dynamic rawcode;
-    final String? rawname;
-    final String? serviceremarks;
-    final String? barcode;
-    dynamic qty;
-    dynamic rate;
-    dynamic gst;
-    final int? billno;
-    final double? gstamt;
-    dynamic discperc;
-    dynamic discamt;
-    final double? roundoff;
-    dynamic totdiscamt;
-    final double? ittotal;
-    dynamic totqty;
-    dynamic totgst;
-    dynamic totordamt;
-    dynamic shopvno;
-    final String? guestname;
-    final String? guestmob;
-    final String? guestadd;
-    final String? itemview;
-    final int? shopid;
-    final int? kdsstatus;
+  final int? id;
+  final int? chid;
+  final int? rcode;
+  final dynamic? roomnoview;
+  final DateTime? orddate;
+  final String? ordtime;
+  final int? deptcode;
+  dynamic rawcode;
+  final String? rawname;
+  final String? serviceremarks;
+  final String? barcode;
+  dynamic qty;
+  dynamic rate;
+  dynamic gst;
+  final int? billno;
+  final double? gstamt;
+  dynamic discperc;
+  dynamic discamt;
+  final double? roundoff;
+  dynamic totdiscamt;
+  final double? ittotal;
+  dynamic totqty;
+  dynamic totgst;
+  dynamic totordamt;
+  dynamic shopvno;
+  final String? guestname;
+  final String? guestmob;
+  final String? guestadd;
+  final String? itemview;
+  final int? shopid;
+  final int? kdsstatus;
 
-    Kot({
-        required this.id,
-        required this.chid,
-        required this.rcode,
-        required this.roomnoview,
-        required this.orddate,
-        required this.ordtime,
-        required this.deptcode,
-        required this.rawcode,
-        required this.rawname,
-        required this.serviceremarks,
-        required this.barcode,
-        required this.qty,
-        required this.rate,
-        required this.gst,
-        required this.billno,
-        required this.gstamt,
-        required this.discperc,
-        required this.discamt,
-        required this.roundoff,
-        required this.totdiscamt,
-        required this.ittotal,
-        required this.totqty,
-        required this.totgst,
-        required this.totordamt,
-        required this.shopvno,
-        required this.guestname,
-        required this.guestmob,
-        required this.guestadd,
-        required this.itemview,
-        required this.shopid,
-        required this.kdsstatus,
-    });
+  Kot({
+    required this.id,
+    required this.chid,
+    required this.rcode,
+    required this.roomnoview,
+    required this.orddate,
+    required this.ordtime,
+    required this.deptcode,
+    required this.rawcode,
+    required this.rawname,
+    required this.serviceremarks,
+    required this.barcode,
+    required this.qty,
+    required this.rate,
+    required this.gst,
+    required this.billno,
+    required this.gstamt,
+    required this.discperc,
+    required this.discamt,
+    required this.roundoff,
+    required this.totdiscamt,
+    required this.ittotal,
+    required this.totqty,
+    required this.totgst,
+    required this.totordamt,
+    required this.shopvno,
+    required this.guestname,
+    required this.guestmob,
+    required this.guestadd,
+    required this.itemview,
+    required this.shopid,
+    required this.kdsstatus,
+  });
 
-    factory Kot.fromRawJson(String str) => Kot.fromJson(json.decode(str));
+  factory Kot.fromRawJson(String str) => Kot.fromJson(json.decode(str));
 
-    String toRawJson() => json.encode(toJson());
+  String toRawJson() => json.encode(toJson());
 
-    factory Kot.fromJson(Map<String, dynamic> json) => Kot(
+  factory Kot.fromJson(Map<String, dynamic> json) => Kot(
         id: json["id"],
         chid: json["chid"],
         rcode: json["rcode"],
@@ -131,14 +129,15 @@ class Kot {
         itemview: json["itemview"],
         shopid: json["shopid"],
         kdsstatus: json["kdsstatus"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "chid": chid,
         "rcode": rcode,
         "roomnoview": roomnoview,
-        "orddate": "${orddate!.year.toString().padLeft(4, '0')}-${orddate!.month.toString().padLeft(2, '0')}-${orddate!.day.toString().padLeft(2, '0')}",
+        "orddate":
+            "${orddate!.year.toString().padLeft(4, '0')}-${orddate!.month.toString().padLeft(2, '0')}-${orddate!.day.toString().padLeft(2, '0')}",
         "ordtime": ordtime,
         "deptcode": deptcode,
         "rawcode": rawcode,
@@ -165,5 +164,5 @@ class Kot {
         "itemview": itemview,
         "shopid": shopid,
         "kdsstatus": kdsstatus,
-    };
+      };
 }

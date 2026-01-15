@@ -1,4 +1,4 @@
-package com.example.billhosts
+package com.billhost.kdsapp
 
 import io.flutter.embedding.android.FlutterActivity
 

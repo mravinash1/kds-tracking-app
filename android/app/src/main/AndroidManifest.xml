@@ -9,12 +9,6 @@
 <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 
-
-
-
-
-
-
     <application
         android:label="BillHost_KDS"
         android:name="${applicationName}"

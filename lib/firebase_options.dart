@@ -41,49 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA9Gev4Fbqj2pIuMud6ZdyLhfVTi5anSkQ',
-    appId: '1:476474245368:web:30270794e14de73d813b0d',
-    messagingSenderId: '476474245368',
-    projectId: 'billhosthotel',
-    authDomain: 'billhosthotel.firebaseapp.com',
-    storageBucket: 'billhosthotel.firebasestorage.app',
-    measurementId: 'G-HNG8CQM0E0',
+    apiKey: 'AIzaSyBdnQmQ0L21MZ-mJ_YGdaQdpLdqTNhvq_g',
+    appId: '1:237675195585:web:950d21f8a83f44ffec7840',
+    messagingSenderId: '237675195585',
+    projectId: 'billhostkds',
+    authDomain: 'billhostkds.firebaseapp.com',
+    storageBucket: 'billhostkds.firebasestorage.app',
+    measurementId: 'G-TXM6FLX0S0',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD_McmKhKbs2o7F0pLyLUm-kE5XNQIGhfU',
-    appId: '1:476474245368:android:c3d91bed091e6bd6813b0d',
-    messagingSenderId: '476474245368',
-    projectId: 'billhosthotel',
-    storageBucket: 'billhosthotel.firebasestorage.app',
+    apiKey: 'AIzaSyC9GIDQrq03ZPRbKxvQaCHoNbkIH5ygk78',
+    appId: '1:237675195585:android:4166d3a45aefb64bec7840',
+    messagingSenderId: '237675195585',
+    projectId: 'billhostkds',
+    storageBucket: 'billhostkds.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDLpYIQMTD6rivst_8IQtOvIkxfG0tk3Xk',
-    appId: '1:476474245368:ios:6f16facb64204974813b0d',
-    messagingSenderId: '476474245368',
-    projectId: 'billhosthotel',
-    storageBucket: 'billhosthotel.firebasestorage.app',
+    apiKey: 'AIzaSyCS1EryZafusAJge9Lh-WCm4l9_WJz_wKc',
+    appId: '1:237675195585:ios:c0f31a6ac1ba8e27ec7840',
+    messagingSenderId: '237675195585',
+    projectId: 'billhostkds',
+    storageBucket: 'billhostkds.firebasestorage.app',
     iosBundleId: 'com.example.billhosts',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDLpYIQMTD6rivst_8IQtOvIkxfG0tk3Xk',
-    appId: '1:476474245368:ios:6f16facb64204974813b0d',
-    messagingSenderId: '476474245368',
-    projectId: 'billhosthotel',
-    storageBucket: 'billhosthotel.firebasestorage.app',
+    apiKey: 'AIzaSyCS1EryZafusAJge9Lh-WCm4l9_WJz_wKc',
+    appId: '1:237675195585:ios:c0f31a6ac1ba8e27ec7840',
+    messagingSenderId: '237675195585',
+    projectId: 'billhostkds',
+    storageBucket: 'billhostkds.firebasestorage.app',
     iosBundleId: 'com.example.billhosts',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyA9Gev4Fbqj2pIuMud6ZdyLhfVTi5anSkQ',
-    appId: '1:476474245368:web:6b375d798cff323e813b0d',
-    messagingSenderId: '476474245368',
-    projectId: 'billhosthotel',
-    authDomain: 'billhosthotel.firebaseapp.com',
-    storageBucket: 'billhosthotel.firebasestorage.app',
-    measurementId: 'G-0KKPW09V49',
+    apiKey: 'AIzaSyBdnQmQ0L21MZ-mJ_YGdaQdpLdqTNhvq_g',
+    appId: '1:237675195585:web:c0b5c8466b0b9779ec7840',
+    messagingSenderId: '237675195585',
+    projectId: 'billhostkds',
+    authDomain: 'billhostkds.firebaseapp.com',
+    storageBucket: 'billhostkds.firebasestorage.app',
+    measurementId: 'G-V2EL9QJ78D',
   );
 
 }

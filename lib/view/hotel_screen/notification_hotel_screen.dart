@@ -48,6 +48,22 @@ import 'package:intl/intl.dart';
           child: GetBuilder<HotelDisplayController>(
               init: controller,
               builder: (context) {
+               if (controller.filterKDS.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No service available',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                );
+              }
+                
+
+
+
                 return ListView.builder(
                   padding: const EdgeInsets.only(bottom: 45,left: 5,right: 5),
                   itemCount: controller.filterKDS.length,
