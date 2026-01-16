@@ -399,10 +399,10 @@ class _KitchenScreenState extends State<KitchenScreen> {
                                                     isItemReady || isCancelled
                                                         ? Colors.grey.shade700
                                                         : Colors.black87,
-                                                decoration: isItemReady ||
-                                                        isCancelled
-                                                    ? TextDecoration.lineThrough
-                                                    : null,
+                                                decoration:
+                                                    isItemReady || isCancelled
+                                                        ? TextDecoration.none
+                                                        : null,
                                                 decorationColor: Colors.red,
                                                 decorationThickness: 2,
                                               ),
@@ -493,7 +493,7 @@ class _KitchenScreenState extends State<KitchenScreen> {
                                               ),
                                             ),
                                             child: const Text(
-                                              "READY",
+                                              "Ready",
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 14,
@@ -508,7 +508,7 @@ class _KitchenScreenState extends State<KitchenScreen> {
                                           padding:
                                               const EdgeInsets.only(right: 12),
                                           child: Text(
-                                            "Pending",
+                                            "",
                                             style: TextStyle(
                                               color: Colors.orange.shade800,
                                               fontWeight: FontWeight.w600,
@@ -603,8 +603,6 @@ class _KitchenScreenState extends State<KitchenScreen> {
                                       ),
                               ),
                             ),
-
-                            // In KitchenScreen build method, add printer controls:
 
                             SizedBox(
                               height: 4,

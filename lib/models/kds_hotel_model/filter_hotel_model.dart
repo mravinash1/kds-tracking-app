@@ -88,11 +88,13 @@ class KotDatas {
   final String? guestadd;
   final String? itemview;
   final int? shopid;
-  final int? kdsstatus;
+  final dynamic kdsstatus;
   bool isLoading;
+  bool isItemReady = false;
 
   KotDatas(
       {required this.id,
+      this.isItemReady = false,
       required this.chid,
       required this.rcode,
       required this.roomnoview,
@@ -132,6 +134,7 @@ class KotDatas {
 
   factory KotDatas.fromJson(Map<String, dynamic> json) => KotDatas(
         id: json["id"],
+        isItemReady: false,
         chid: json["chid"],
         rcode: json["rcode"],
         roomnoview: json["roomnoview"],

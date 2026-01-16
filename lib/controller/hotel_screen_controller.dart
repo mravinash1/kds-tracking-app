@@ -147,39 +147,39 @@ class HotelDisplayController extends GetxController {
     }
   }
 
-  Future<void> updateOrderStatus({
-    required int shopNumber,
-    required int status,
-    required int orderIndex,
-  }) async {
-    final url =
-        "https://hotelserver.billhost.co.in/KDSDisplayUpdateStatusHotel/${loginController.userId}/${shopNumber.toInt()}/$status";
+  // Future<void> updateOrderStatus({
+  //   required int shopNumber,
+  //   required int status,
+  //   required int orderIndex,
+  // }) async {
+  //   final url =
+  //       "https://hotelserver.billhost.co.in/KDSDisplayUpdateStatusHotel/${loginController.userId}/${shopNumber.toInt()}/$status";
 
-    isLoadingUpdateStatus = true;
-    filterKDS[orderIndex].orders.first.kot.isLoading = true;
-    update();
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"status": "Ready"}),
-      );
+  //   isLoadingUpdateStatus = true;
+  //   filterKDS[orderIndex].orders.first.kot.isLoading = true;
+  //   update();
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: {"Content-Type": "application/json"},
+  //       body: jsonEncode({"status": "Ready"}),
+  //     );
 
-      if (response.statusCode == 200) {
-        Future.delayed(const Duration(seconds: 1), () => fetchData());
+  //     if (response.statusCode == 200) {
+  //       Future.delayed(const Duration(seconds: 1), () => fetchData());
 
-        _playSound();
-      } else {
-        Get.snackbar("Error", "Failed to update order status");
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Something went wrong");
-      debugPrint("Update order status error: $e");
-    } finally {
-      isLoadingUpdateStatus = false;
-      update();
-    }
-  }
+  //       _playSound();
+  //     } else {
+  //       Get.snackbar("Error", "Failed to update order status");
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar("Error", "Something went wrong");
+  //     debugPrint("Update order status error: $e");
+  //   } finally {
+  //     isLoadingUpdateStatus = false;
+  //     update();
+  //   }
+  // }
 
   final BluetoothPrinterHotel printerManager = BluetoothPrinterHotel();
 
@@ -244,5 +244,95 @@ class HotelDisplayController extends GetxController {
       _timer = null;
     }
     super.onClose();
+  }
+
+  Future<void> markSingleHotelItemAsReady({
+    required int shopNumber,
+    required String rawcode, // this is incoming as string, possibly "18621.0"
+    required int groupIndex,
+    required int itemIndex,
+  }) async {
+    // Clean rawcode to integer string
+    String cleanRawcode = rawcode;
+    if (cleanRawcode.contains('.')) {
+      cleanRawcode = (double.tryParse(cleanRawcode) ?? 0).toInt().toString();
+    }
+
+    debugPrint("Cleaned rawcode: '$cleanRawcode'");
+
+    if (cleanRawcode.isEmpty) {
+      Get.snackbar("Error", "Invalid rawcode", backgroundColor: Colors.orange);
+      return;
+    }
+
+    // final url ="https://hotelserver.billhost.co.in/KDSDisplayHotelMarkItemAsReady/""${loginController.userId}/$shopNumber/0/$cleanRawcode";
+
+    final url =
+        '${AppConstants.baseUrl}KDSDisplayHotelMarkItemAsReady/${loginController.userId}/$shopNumber/0/$cleanRawcode';
+
+    debugPrint("Calling API with clean URL: $url");
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      debugPrint("Status: ${response.statusCode}");
+      debugPrint("Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        // success logic...
+        final order = filterKDS[groupIndex].orders[itemIndex];
+        order.kot.isItemReady = true;
+        update();
+        Get.snackbar("Success", "Item marked ready",
+            backgroundColor: Colors.green);
+        Future.delayed(const Duration(seconds: 2), () => fetchData());
+      } else {
+        Get.snackbar(
+            "Failed", "Status ${response.statusCode}: ${response.body}",
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString(), backgroundColor: Colors.red);
+    }
+  }
+
+  Future<void> updateOrderStatus({
+    required int shopNumber,
+    required int status,
+    required int orderIndex,
+  }) async {
+    //final url ="https://hotelserver.billhost.co.in/KDSDisplayUpdateStatusHotel/${loginController.userId}/${shopNumber.toInt()}/$status";
+
+    final url =
+        "${AppConstants.baseUrl}KDSDisplayUpdateStatusHotel/${loginController.userId}/${shopNumber.toInt()}/$status";
+
+    isLoadingUpdateStatus = true;
+    filterKDS[orderIndex].orders.first.kot.isLoading = true;
+    update();
+
+    try {
+      debugPrint(url);
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"status": status == 0 ? "Accepted" : "Ready"}),
+      );
+
+      if (response.statusCode == 200) {
+        _playSound();
+        // Get.snackbar("Success", status == 0 ? "Order Accepted" : "Order Ready",
+        //     backgroundColor: Colors.green);
+      } else {
+        debugPrint('Update to faield');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoadingUpdateStatus = false;
+      update();
+    }
   }
 }

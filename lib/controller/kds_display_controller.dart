@@ -269,19 +269,16 @@ class KDSDisplayController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        // Local update - accept hone pe items hide mat karo
-        for (var order in filterKDS[orderIndex].orders) {
-          // order.kot.kdsstatus = status;  // agar int hota to yeh, lekin ab string assume
-        }
-
+        for (var order in filterKDS[orderIndex].orders) {}
         _playSound();
-        Get.snackbar("Success", status == 0 ? "Order Accepted" : "Order Ready",
-            backgroundColor: Colors.green);
+
+        // // Get.snackbar("Success", status == 0 ? "Order Accepted" : "Order Ready",
+        // //     backgroundColor: Colors.green);
       } else {
-        Get.snackbar("Error", "Failed to update status");
+        debugPrint('Failed to update status');
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong");
+      // Get.snackbar("Error", "Something went wrong");
     } finally {
       isLoadingUpdateStatus = false;
       update();
@@ -335,8 +332,6 @@ class KDSDisplayController extends GetxController {
     }
   }
 
-// Existing code ke neeche add karo (printOrder ke baad ya updateOrderStatus ke neeche)
-
   Future<void> markSingleItemAsReady({
     required int shopNumber,
     required String rawcode,
@@ -344,8 +339,8 @@ class KDSDisplayController extends GetxController {
     required int itemIndex,
   }) async {
     if (rawcode.isEmpty) {
-      Get.snackbar("Error", "Item rawcode missing",
-          backgroundColor: Colors.orange);
+      debugPrint('item rawcode missing');
+
       return;
     }
 
@@ -357,11 +352,9 @@ class KDSDisplayController extends GetxController {
       final response = await http.post(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        // Local UI update (real backend status fetchData se aayega)
         final order = filterKDS[groupIndex].orders[itemIndex];
         order.kot.isItemReady = true;
 
-        // Check if all items in this group are ready
         final group = filterKDS[groupIndex];
 
         bool allReady = group.orders.every((o) =>
@@ -370,24 +363,12 @@ class KDSDisplayController extends GetxController {
                 false) ||
             (o.kot.qty ?? 0) <= 0);
 
-        if (allReady) {
-          // Optional: pura group hata do (comment out agar nahi chahiye)
-          // filterKDS.removeAt(groupIndex);
-          Get.snackbar(
-              "Order Complete", "All items ready in KOT ${group.shopvno}",
-              backgroundColor: Colors.green[800]);
-        }
+        if (allReady) {}
 
-        update(); // UI refresh
-
-        Get.snackbar("Success", "Item marked as ready",
-            backgroundColor: Colors.green);
-
-        // Server se latest data laane ke liye thodi der baad refresh
+        update();
         Future.delayed(const Duration(seconds: 2), () => fetchData());
       } else {
-        Get.snackbar("Failed", "API error: ${response.statusCode}",
-            backgroundColor: Colors.red);
+        debugPrint('${response.statusCode}');
       }
     } catch (e) {
       Get.snackbar("Network Error", e.toString(), backgroundColor: Colors.red);

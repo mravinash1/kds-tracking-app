@@ -262,6 +262,21 @@ class _MainScreenState extends State<MainScreen> {
                     loginController.logout();
                   },
                 ),
+                ListTile(
+                  leading: Icon(
+                    Icons.done,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Complate Item",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    // Get.to(LoginScreen());
+                    loginController.logout();
+                  },
+                ),
               ],
             ),
           ),

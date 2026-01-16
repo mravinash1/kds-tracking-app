@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/login_controller.dart';
@@ -59,7 +57,8 @@ class LoginScreen extends StatelessWidget {
                               .map(
                                 (role) => DropdownMenuItem(
                                   value: role,
-                                  child: Text(role, style: TextStyle(color: Colors.white)),
+                                  child: Text(role,
+                                      style: TextStyle(color: Colors.white)),
                                 ),
                               )
                               .toList(),
@@ -74,7 +73,9 @@ class LoginScreen extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                           controller: controller.emailController,
                           decoration: InputDecoration(
-                            labelText: controller.loginRole == 'Admin' ? "Email" : "Narration",
+                            labelText: controller.loginRole == 'Admin'
+                                ? "Email"
+                                : "Narration",
                             labelStyle: TextStyle(color: Colors.white),
                             hintText: controller.loginRole == 'Admin'
                                 ? 'Enter email'
@@ -83,7 +84,8 @@ class LoginScreen extends StatelessWidget {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            suffixIcon: Icon(Icons.email_outlined, color: Colors.white),
+                            suffixIcon:
+                                Icon(Icons.email_outlined, color: Colors.white),
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -118,7 +120,8 @@ class LoginScreen extends StatelessWidget {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 30, vertical: 12),
                                     ),
                                     child: const Text(
                                       'Login',
@@ -153,6 +156,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-
-
