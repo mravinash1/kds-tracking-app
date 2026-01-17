@@ -4,6 +4,7 @@ import 'package:billhosts/controller/login_controller.dart';
 import 'package:billhosts/utils/bluetooth_printer_helper.dart';
 import 'package:billhosts/utils/printer_selection.dart';
 import 'package:billhosts/view/clubitem/club_item_screen.dart';
+import 'package:billhosts/view/complate_item/complate_item_screen.dart';
 import 'package:billhosts/view/hotel_screen/hotel_screen.dart';
 import 'package:billhosts/view/hotel_screen/notification_hotel_screen.dart';
 import 'package:billhosts/view/kichen_display/kichen_display.dart';
@@ -246,6 +247,21 @@ class _MainScreenState extends State<MainScreen> {
                         ));
                   },
                 ),
+                ListTile(
+                  leading: Icon(
+                    Icons.done,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Complate Item",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () {
+                    Get.to(() => const CompletedItemsScreen());
+                  },
+                ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(
@@ -254,21 +270,6 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   title: const Text(
                     "Logout",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {
-                    // Get.to(LoginScreen());
-                    loginController.logout();
-                  },
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.done,
-                    color: Colors.black,
-                  ),
-                  title: const Text(
-                    "Complate Item",
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
                   ),
