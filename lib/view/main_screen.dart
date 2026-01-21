@@ -5,11 +5,13 @@ import 'package:billhosts/utils/bluetooth_printer_helper.dart';
 import 'package:billhosts/utils/printer_selection.dart';
 import 'package:billhosts/view/clubitem/club_item_screen.dart';
 import 'package:billhosts/view/complate_item/complate_item_screen.dart';
+import 'package:billhosts/view/complate_order/complate_order_screen.dart';
 import 'package:billhosts/view/hotel_screen/hotel_screen.dart';
 import 'package:billhosts/view/hotel_screen/notification_hotel_screen.dart';
 import 'package:billhosts/view/kichen_display/kichen_display.dart';
 import 'package:billhosts/view/kichen_display/notification_kitchen_screen.dart';
 import 'package:billhosts/view/kichen_display/stock_update_screen.dart';
+import 'package:billhosts/view/live_order_status/live_order_status_screen.dart';
 import 'package:billhosts/view/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -253,13 +255,43 @@ class _MainScreenState extends State<MainScreen> {
                     color: Colors.black,
                   ),
                   title: const Text(
-                    "Complate Item",
+                    "Completed Items",
                     style: TextStyle(
                       color: Colors.black,
                     ),
                   ),
                   onTap: () {
                     Get.to(() => const CompletedItemsScreen());
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.done,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Completed Order",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () {
+                    Get.to(() => CompletedOrderScreen());
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.done,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    "Live Order Status",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  onTap: () {
+                    Get.to(() => LiveOrderStatusScreen());
                   },
                 ),
                 const Divider(),

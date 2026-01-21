@@ -1,3 +1,4 @@
+import 'package:billhosts/constants/internet_controller.dart';
 import 'package:billhosts/controller/login_controller.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -13,10 +14,17 @@ class CompletedItemsController extends GetxController {
   var errorMessage = RxnString();
 
   LoginController loginController = Get.put(LoginController());
+  final InternetController internetController = Get.find<InternetController>();
 
   @override
   void onInit() {
     super.onInit();
+    ever(internetController.isConnected, (connected) {
+      if (connected == true) {
+        fetchCompletedItems();
+      }
+    });
+
     fetchCompletedItems();
   }
 
@@ -28,6 +36,11 @@ class CompletedItemsController extends GetxController {
   }
 
   Future<void> fetchCompletedItems() async {
+    if (!internetController.isConnected.value) {
+      errorMessage.value = "No Internet Connection";
+      return;
+    }
+
     isLoading.value = true;
     errorMessage.value = null;
     items.clear();
@@ -40,14 +53,14 @@ class CompletedItemsController extends GetxController {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "sqlQuery": """
-            SELECT itemmas.itname, SUM(qty) AS total_ready_qty 
-            FROM kotmas, itemmas 
-            WHERE itemmas.id = kotmas.rawcode 
-            AND kotmas.shopid = ${loginController.userId}
-            AND kotmas.kotdate = '$formattedDate' 
-            AND kotmas.kdsstatus = 0 
-            GROUP BY itemmas.itname
-          """
+          SELECT itemmas.itname, SUM(qty) AS total_ready_qty 
+          FROM kotmas, itemmas 
+          WHERE itemmas.id = kotmas.rawcode 
+          AND kotmas.shopid = ${loginController.userId}
+          AND kotmas.kotdate = '$formattedDate' 
+          AND kotmas.kdsstatus = 0 
+          GROUP BY itemmas.itname
+        """
         }),
       );
 
@@ -59,11 +72,10 @@ class CompletedItemsController extends GetxController {
           errorMessage.value = 'Invalid response format';
         }
       } else {
-        errorMessage.value =
-            'Server error: ${response.statusCode}\n${response.body}';
+        errorMessage.value = 'Server Error ${response.statusCode}';
       }
     } catch (e) {
-      errorMessage.value = 'Network error: $e';
+      errorMessage.value = 'Network Error';
     } finally {
       isLoading.value = false;
     }

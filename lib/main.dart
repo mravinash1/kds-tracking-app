@@ -1,3 +1,4 @@
+import 'package:billhosts/constants/internet_controller.dart';
 import 'package:billhosts/controller/kds_display_controller.dart';
 import 'package:billhosts/utils/bluetooth_printer_helper.dart';
 import 'package:billhosts/utils/notification_services.dart';
@@ -9,6 +10,8 @@ import 'view/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
+  Get.put(InternetController(), permanent: true);
+
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init(); // Initialize notifications
   await requestNotificationPermission();

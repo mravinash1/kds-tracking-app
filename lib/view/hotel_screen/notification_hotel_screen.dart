@@ -3,37 +3,38 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-  class NotificationHotelScreen extends StatefulWidget {
+class NotificationHotelScreen extends StatefulWidget {
   const NotificationHotelScreen({super.key});
 
   @override
-  State<NotificationHotelScreen> createState() => _NotificationHotelScreenState();
+  State<NotificationHotelScreen> createState() =>
+      _NotificationHotelScreenState();
 }
 
-
-  class _NotificationHotelScreenState extends State<NotificationHotelScreen> {
+class _NotificationHotelScreenState extends State<NotificationHotelScreen> {
   late HotelDisplayController controller;
 
   @override
-   void initState() {
+  void initState() {
     controller = Get.put(HotelDisplayController());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
-    return 
-    Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text('Room Services',style: TextStyle(fontWeight: FontWeight.w500),),
+        title: Text(
+          'Room Services',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
         centerTitle: true,
-      backgroundColor: Colors.green,
-
+        backgroundColor: Colors.green,
         leading: InkWell(
-          onTap: () {
-            Get.back();
-          },
-          child: Icon(Icons.arrow_back_ios)),
+            onTap: () {
+              Get.back();
+            },
+            child: Icon(Icons.arrow_back_ios)),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -48,24 +49,21 @@ import 'package:intl/intl.dart';
           child: GetBuilder<HotelDisplayController>(
               init: controller,
               builder: (context) {
-               if (controller.filterKDS.isEmpty) {
-                return const Center(
-                  child: Text(
-                    'No service available',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                if (controller.filterKDS.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No service available',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                );
-              }
-                
-
-
+                  );
+                }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 45,left: 5,right: 5),
+                  padding: const EdgeInsets.only(bottom: 45, left: 5, right: 5),
                   itemCount: controller.filterKDS.length,
                   //  itemCount: controller.roomNoList.length,
                   itemBuilder: (context, index) {
@@ -225,10 +223,8 @@ import 'package:intl/intl.dart';
         ),
       ),
     );
-
   }
 
-  
   // Function to format date
   String _formatDate(String rawDate) {
     try {

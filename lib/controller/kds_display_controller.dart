@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:billhosts/constants/internet_controller.dart';
 import 'package:billhosts/controller/login_controller.dart';
 import 'package:billhosts/models/filter_model_of_kds.dart';
 import 'package:billhosts/models/kds_display_models.dart';
@@ -15,6 +16,7 @@ import '../utils/api_service_class.dart';
 class KDSDisplayController extends GetxController {
   final HttpService _apiService = HttpService();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final InternetController internetController = Get.find<InternetController>();
 
   List<KdsDisplayModel> kdslists = [];
   List<FilterModelOfKds> filterKDS = [];
@@ -34,6 +36,7 @@ class KDSDisplayController extends GetxController {
   int previousOrderCount = 0;
   bool _isFirstFetch = true;
   int dayCloseType = 0;
+  var errorMessage = RxnString();
 
   @override
   void onInit() {
@@ -42,6 +45,12 @@ class KDSDisplayController extends GetxController {
 
     fetchData();
     _timer = Timer.periodic(const Duration(seconds: 5), (_) => fetchData());
+
+    ever(internetController.isConnected, (connected) {
+      if (connected == true) {
+        fetchData();
+      }
+    });
   }
 
   @override
@@ -59,6 +68,10 @@ class KDSDisplayController extends GetxController {
   }
 
   Future fetchData() async {
+    if (!internetController.isConnected.value) {
+      errorMessage.value = "No Internet Connection";
+      return;
+    }
     isLoading = true;
     update();
 

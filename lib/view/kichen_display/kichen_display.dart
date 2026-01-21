@@ -1,3 +1,5 @@
+import 'package:billhosts/constants/internet_controller.dart';
+import 'package:billhosts/utils/no_internet.dart';
 import 'package:billhosts/utils/printer_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,7 @@ class KitchenScreen extends StatefulWidget {
 
 class _KitchenScreenState extends State<KitchenScreen> {
   late KDSDisplayController controller;
+  InternetController internetController = Get.put(InternetController());
 
   @override
   void initState() {
@@ -25,7 +28,12 @@ class _KitchenScreenState extends State<KitchenScreen> {
     double textScale = MediaQuery.of(context).textScaleFactor;
 
     return Scaffold(
-      body: Padding(
+      body: Obx(() {
+      if (!internetController.isConnected.value) {
+        return const NoInternetWidget();
+      }
+
+      return Padding(
         padding: const EdgeInsets.all(1),
         child: Container(
           decoration: BoxDecoration(
@@ -37,23 +45,6 @@ class _KitchenScreenState extends State<KitchenScreen> {
           ),
           child: GetBuilder<KDSDisplayController>(
             init: controller,
-
-            // Add line
-
-            // builder: (context) {
-            //     if (controller.filterKDS.isEmpty) {
-            //     return const Center(
-            //       child: Text(
-            //         'No service available',
-            //         style: TextStyle(
-            //           fontSize: 24,
-            //           fontWeight: FontWeight.bold,
-            //           color: Colors.grey,
-            //         ),
-            //       ),
-            //     );
-            //   }
-
             builder: (context) {
               if (controller.isLoading) {
                 Center(
@@ -221,122 +212,6 @@ class _KitchenScreenState extends State<KitchenScreen> {
                                 ),
                               ),
                             ),
-
-                            // Items List
-                            // ListView.builder(
-                            //   shrinkWrap: true,
-                            //   physics: const NeverScrollableScrollPhysics(),
-                            //   itemCount: data.orders.length,
-                            //   itemBuilder: (context, index1) {
-                            //     var orderData = data.orders[index1];
-
-                            //     return Container(
-                            //       padding: const EdgeInsets.symmetric(
-                            //         vertical: 4,
-                            //         horizontal: 10,
-                            //       ),
-
-                            //       // decoration: BoxDecoration(
-                            //       //   border: Border(
-                            //       //     bottom: BorderSide(color: Colors.grey.shade300, width: 1),
-                            //       //   ),
-                            //       // ),
-
-                            //       child: Column(
-                            //         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                            //         children: [
-                            //           Row(
-                            //             mainAxisAlignment:
-                            //                 MainAxisAlignment.spaceBetween,
-                            //             children: [
-                            //               // Expanded(child: Text(' ${orderData.kot.itname}',style: TextStyle(fontWeight: FontWeight.bold),)),
-                            //               Expanded(
-                            //                 child: Text(
-                            //                   '${orderData.kot.itname}',
-                            //                   style: TextStyle(
-                            //                     fontSize: textScale * 16,
-                            //                     fontWeight: FontWeight.bold,
-                            //                     color: orderData.kot.qty == 0
-                            //                         ? const Color.fromARGB(
-                            //                             255, 8, 8, 8)
-                            //                         : Colors.black,
-                            //                     decoration: orderData.kot.qty ==
-                            //                             0
-                            //                         ? TextDecoration.lineThrough
-                            //                         : TextDecoration.none,
-                            //                     decorationColor: Colors.red,
-                            //                     decorationThickness: 2,
-                            //                   ),
-                            //                 ),
-                            //               ),
-
-                            //               // Text(
-                            //               //    'X ${orderData.kot.qty?.toStringAsFixed(0)}',
-                            //               //       style: TextStyle(fontSize: textScale * 15, color: Colors.black),
-                            //               //       ),
-
-                            //               Text(
-                            //                 orderData.kot.qty == 0
-                            //                     ? 'Cancel'
-                            //                     : 'X ${orderData.kot.qty?.toStringAsFixed(0)}',
-                            //                 style: TextStyle(
-                            //                   fontSize: textScale * 15,
-                            //                   color: orderData.kot.qty == 0
-                            //                       ? Colors.red
-                            //                       : Colors.black,
-                            //                   fontWeight: FontWeight.bold,
-                            //                 ),
-                            //               ),
-
-                            //               SizedBox(
-                            //                 width: 5,
-                            //               ),
-
-                            //               Text(
-                            //                 data.orders.first.UnitName
-                            //                     .toString(),
-                            //                 style: TextStyle(color: Colors.red),
-                            //               ),
-                            //             ],
-                            //           ),
-                            //           Row(
-                            //             mainAxisAlignment:
-                            //                 MainAxisAlignment.spaceBetween,
-                            //             children: [
-                            //               Padding(
-                            //                 padding:
-                            //                     const EdgeInsets.only(left: 5),
-                            //                 child: Text(
-                            //                   orderData.kot.itcomment
-                            //                       .toString(),
-                            //                   style: const TextStyle(
-                            //                       color: Colors.red,
-                            //                       fontWeight: FontWeight.bold),
-                            //                   textAlign: TextAlign.right,
-                            //                 ),
-                            //               ),
-                            //               if (orderData.kot.havetopack == 1)
-                            //                 Row(
-                            //                   children: [
-                            //                     Text(
-                            //                       "Have to Pack",
-                            //                       style: TextStyle(
-                            //                           color: Colors.redAccent,
-                            //                           fontWeight:
-                            //                               FontWeight.bold),
-                            //                     ),
-
-                            //                     //  const Icon(Icons.redeem_outlined, color: Colors.redAccent, size: 18),
-                            //                   ],
-                            //                 ),
-                            //             ],
-                            //           )
-                            //         ],
-                            //       ),
-                            //     );
-                            //   },
-                            // ),
 
                             ListView.builder(
                               shrinkWrap: true,
@@ -671,8 +546,8 @@ class _KitchenScreenState extends State<KitchenScreen> {
             },
           ),
         ),
-      ),
-    );
+      );
+    }));
   }
 }
 

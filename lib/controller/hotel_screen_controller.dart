@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:billhosts/constants/internet_controller.dart';
 import 'package:billhosts/controller/login_controller.dart';
 import 'package:billhosts/utils/bluetoothprinter_hotel.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HotelDisplayController extends GetxController {
   final HttpService _apiService = HttpService();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final InternetController internetController = Get.find<InternetController>();
 
   List<KdsHotelModel> kdslists = [];
   List<FilterModelOfHotel> filterKDS = [];
@@ -33,6 +35,7 @@ class HotelDisplayController extends GetxController {
   var notificationCount = 0.obs;
   Timer? _timer;
   var shopId = 0;
+  var errorMessage = RxnString();
 
   @override
   void onInit() {
@@ -52,6 +55,11 @@ class HotelDisplayController extends GetxController {
   }
 
   Future fetchData() async {
+    ever(internetController.isConnected, (connected) {
+      if (connected == true) {
+        fetchData();
+      }
+    });
     isLoading = true;
     update();
 

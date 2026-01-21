@@ -1,4 +1,5 @@
 import 'package:billhosts/constants/endpoint.dart';
+import 'package:billhosts/constants/internet_controller.dart';
 import 'package:billhosts/models/stock_item_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -8,21 +9,33 @@ class ItemController extends GetxController {
   final int shopId;
 
   ItemController(this.shopId);
+  final InternetController internetController = Get.find<InternetController>();
 
   var items = <ItemModel>[].obs;
   var filteredItems = <ItemModel>[].obs;
   var searchQuery = ''.obs;
   var isLoading = true.obs;
+  var errorMessage = RxnString();
 
   @override
   void onInit() {
     fetchItems();
     ever(searchQuery, (_) => applySearch());
+    ever(internetController.isConnected, (connected) {
+      if (connected == true) {
+        fetchItems();
+      }
+    });
 
     super.onInit();
   }
 
   void fetchItems() async {
+    if (!internetController.isConnected.value) {
+      errorMessage.value = "No Internet Connection";
+      isLoading(false);
+      return;
+    }
     try {
       isLoading(true);
       final url = '${AppConstants.baseUrl}$shopId/item';
@@ -49,20 +62,6 @@ class ItemController extends GetxController {
       isLoading(false);
     }
   }
-
-  // void toggleKitchenStatus(int index) {
-  //   final current = items[index];
-  //   current.kitchenstatus = current.kitchenstatus == 0 ? 1 : 0;
-  //   items[index] = current;
-  //   items.refresh();
-
-  // Get.snackbar(
-  //   "Status Updated",
-  //   current.kitchenstatus == 1 ? "Item Disabled" : "Item Activated",
-  //   snackPosition: SnackPosition.BOTTOM,
-  // );
-
-  // }
 
   Future<void> toggleKitchenStatus(int index) async {
     final item = items[index];
